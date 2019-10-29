@@ -21,7 +21,12 @@ app.get('/screams', (request, response, next) => {
     .then(data => {
         let screams = [];
         data.forEach(document => {
-            screams.push(document.data());
+            screams.push({
+                screamId: document.id,
+                body: document.data().body,
+                userHandle: document.data().userHandle,
+                createdAt: document.data().createdAt,
+            });
         });
         return response.status(200).json(screams);
     })
