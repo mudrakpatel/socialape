@@ -1,11 +1,19 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const express = require('express');
 
-//Initialize application
+//Initialize Firebase application
 admin.initializeApp();
 
-//getScreams function
-exports.getScreams = functions.https.onRequest((request, response) => {
+//Initialize express app
+const app = express();
+
+//Let Firebase know that app is 
+//the container for all our routes
+exports.api = functions.https.onRequest(app);
+
+//Get all Screams
+app.get('/screams', (request, response, next) => {
     admin
     .firestore()
     .collection('screams')
@@ -22,14 +30,15 @@ exports.getScreams = functions.https.onRequest((request, response) => {
     });
 });
 
-//addScream function
-exports.addScream = functions.https.onRequest((request, response) => {
+//Add a Scream
+app.post('/scream', (request, response) => {
     const newScream = {
         body: request.body.body,
         userHandle: request.body.userHandle,
         createdAt: admin.firestore.Timestamp.fromDate(new Date()),
     };
-
+    
+    //Add the Scream object to firestore database
     admin
     .firestore()
     .collection('screams')
