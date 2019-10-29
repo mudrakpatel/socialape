@@ -17,6 +17,7 @@ app.get('/screams', (request, response, next) => {
     admin
     .firestore()
     .collection('screams')
+    .orderBy('createdAt', 'desc')
     .get()
     .then(data => {
         let screams = [];
