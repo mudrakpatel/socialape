@@ -41,7 +41,7 @@ app.post('/scream', (request, response) => {
     const newScream = {
         body: request.body.body,
         userHandle: request.body.userHandle,
-        createdAt: admin.firestore.Timestamp.fromDate(new Date()),
+        createdAt: new Date().toISOString(),
     };
     
     //Add the Scream object to firestore database
