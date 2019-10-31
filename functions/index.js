@@ -86,7 +86,34 @@ app.post('/signup', (request, response) => {
     confirmPassword: request.body.confirmPassword,
     handle: request.body.handle,
   };
-  //TODO: Validate data
+
+  //Validate data
+  //Email address vaalidation
+  let errors = {};
+  if(isEmpty(newUser.email)){
+    errors.email = 'Email address must not be empty';
+  } else if(!isEmail(newUser.email)){
+    errors.email = 'Valid email address not provided';
+  }
+  //Password validation
+  if(isEmpty(newUser.password)){
+    errors.password = 'Password must not be empty';
+  }
+  if(newUser.password !== newUser.confirmPassword){
+    errors.confirmPassword = 'Passwords must match';
+  }
+  //User handle validation
+  if(isEmpty(newUser.handle)){
+    errors.handle = 'User handle must not be empty';
+  }
+
+  //Check if errors object is empty.
+  //If errors object has any errors
+  //then return appropriate response.
+  if(Object.keys(errors).length > 0){
+    return response.status(400).json(errors);
+  }
+
   let token, userId;
   db
   .doc(`/users/${newUser.handle}`)
@@ -131,3 +158,23 @@ app.post('/signup', (request, response) => {
     }
   });
 });
+
+//Helper methods
+
+//isEmpty helper function
+const isEmpty = (anyString) => {
+  if (anyString.trim() === '') {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+const isEmail = (email) => {
+  const regularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if(email.match(regularExpression)){
+    return true;
+  } else {
+    return false;
+  }
+};
