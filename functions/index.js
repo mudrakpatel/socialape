@@ -75,6 +75,10 @@ app.post('/scream', (request, response) => {
 });
 
 //Sign Up route
+//INFO: DO NOT use firebase-tools v-7.0.2
+//      otherwise the signup route code will
+//      not return a token. Instead, use
+//      firebase-tools v-6.5.0
 app.post('/signup', (request, response) => {
   const newUser = {
     email: request.body.email,
@@ -98,7 +102,7 @@ app.post('/signup', (request, response) => {
     }
   })
   .then((data) => {
-    return data.user.getIdToken(); //Token is not being returned
+    return data.user.getIdToken();
   })
   .then((token) => {
     return response.status(201).json({token});
