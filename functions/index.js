@@ -93,7 +93,7 @@ app.post('/signup', (request, response) => {
   if(isEmpty(newUser.email)){
     errors.email = 'Email address must not be empty';
   } else if(!isEmail(newUser.email)){
-    errors.email = 'Valid email address not provided';
+    errors.email = 'Invalid email address';
   }
   //Password validation
   if(isEmpty(newUser.password)){
@@ -157,6 +157,53 @@ app.post('/signup', (request, response) => {
       return response.status(500).json({error: err.message});
     }
   });
+});
+
+//Login route
+app.post('/login', (request, response) => {
+  const user = {
+    email: request.body.email,
+    password: request.body.password
+  };
+  let errors = {};
+  //User input validation
+  if(isEmpty(user.email)){
+    errors.email = 'Email address must not be empty';
+  } else if(!isEmail(user.email)){
+    errors.email = 'Invalid email address';
+  }
+  if(isEmpty(user.password)){
+    errors.password = 'Password must not be empty';
+  }
+  //Check if errors object has
+  //any errors or not. If any
+  //errors present, then return
+  //appropriate response.
+  if(Object.keys(errors).length > 0){
+    return response.status(400).json(errors);
+  }
+  //If no errors in user input
+  //then login the user to firebase
+  firebase
+  .auth()
+  .signInWithEmailAndPassword(
+    user.email,
+    user.password)
+    .then((data) => {
+      return data.user.getIdToken();
+    })
+    .then((token) => {
+      return response.json({token});
+    })
+    .catch((err) => {
+      if(err.code === 'auth/wrong-password'){
+        return response.status(403).json({
+          general: 'Wrong credentials, please try again'
+        });
+      } else {
+        return response.status(500).json({error: err});
+      }
+    });
 });
 
 //Helper methods
