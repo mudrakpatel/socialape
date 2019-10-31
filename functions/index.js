@@ -75,7 +75,7 @@ app.post('/scream', (request, response) => {
 });
 
 //Sign Up route
-app.post('/register', (request, response) => {
+app.post('/signup', (request, response) => {
   const newUser = {
     email: request.body.email,
     password: request.body.password,
@@ -98,16 +98,11 @@ app.post('/register', (request, response) => {
     }
   })
   .then((data) => {
-    if(!data.user){
-      return response.status(500).json({message: 'No data.user'});
-    }else{
-      return response.status(201).json({data});
-    }
-    //return data.user.getIdToken(); //Token is not being returned
+    return data.user.getIdToken(); //Token is not being returned
   })
-  // .then((token) => {
-  //   return response.status(201).json({token: token});
-  // })
+  .then((token) => {
+    return response.status(201).json({token});
+  })
   .catch((err) => {
     return response.status(500).json({error: err.message});
   });
