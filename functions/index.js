@@ -87,6 +87,7 @@ app.post('/signup', (request, response) => {
     handle: request.body.handle,
   };
   //TODO: Validate data
+  let token, userId;
   db
   .doc(`/users/${newUser.handle}`)
   .get()
@@ -102,12 +103,31 @@ app.post('/signup', (request, response) => {
     }
   })
   .then((data) => {
+    userId = data.user.uid;
     return data.user.getIdToken();
   })
-  .then((token) => {
+  .then((idToken) => {
+    token = idToken;
+    const userCredentials = {
+      handle: newUser.handle,
+      email: newUser.email,
+      createdAt: new Date().toISOString(),
+      userId: userId
+    };
+    //Add userCredentials to users 
+    //collection in firestore database
+    return db
+      .doc(`/users/${newUser.handle}`)
+      .set(userCredentials);
+  })
+  .then(() => {
     return response.status(201).json({token});
   })
   .catch((err) => {
-    return response.status(500).json({error: err.message});
+    if (err.message === "The email address is already in use by another account."){
+      return response.status(400).json({email: 'Email is already in use'});
+    } else {
+      return response.status(500).json({error: err.message});
+    }
   });
 });
