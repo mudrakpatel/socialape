@@ -192,3 +192,26 @@ exports.addUserDetails = (request, response) => {
       return response.status(500).json({error: err});
     });
 };
+
+//getAuthenticatedUser route handler
+//Gets the loggedin user details
+exports.getAuthenticatedUser = (request, response) => {
+  let userData = {};
+  //Get the loggedin user
+  db.doc(`/users/${request.user.handle}`).get()
+    .then((document) => {
+      if(document.exists){
+        userData.credentials = document.data();
+        return db.collection('likes')
+          .where('userHandle', '==', request.user.handle).get();
+      }
+    }).then((data) => {
+      userData.likes = [];
+      data.forEach(document => {
+        userData.likes.push(document.data());
+      });
+      return response.status(200).json(userData);
+    }).catch((err) => {
+      return response.status(500).json({error: err});
+    });
+};

@@ -9,7 +9,8 @@ const {
     signup,
     login,
     uploadImage,
-    addUserDetails
+    addUserDetails,
+    getAuthenticatedUser,
 } = require('./handlers/users');
 
 // Scream routes
@@ -20,6 +21,7 @@ app.post('/signup', signup);
 app.post('/login', login);
 app.post('/user/image', firebaseAuthMiddleware, uploadImage);
 app.post('/user', firebaseAuthMiddleware, addUserDetails);
+app.get('/user', firebaseAuthMiddleware, getAuthenticatedUser);
 
 // Let Firebase know that app is 
 // the container for all our routes
