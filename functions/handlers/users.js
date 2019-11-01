@@ -123,11 +123,12 @@ exports.uploadImage = (request, response) => {
   let imageToBeUploaded = {};
   //file event
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
-    console.log(`
-      fielsname: ${fieldname},\n
-      filename: ${filename},\n
-      mimetype: ${mimetype},\n
-    `);
+    //Validate mimetype type to
+    //ensure that users only
+    //upload .jpg or .png files.
+    if(mimetype !== 'image/jpeg' && mimetype !== 'image/png'){
+      return response.status(400).json({error: 'JPEG/JPG or PNG file types ONLY accepted'});
+    }
     //Get the extension of the image file
     const imageExtension = filename.split('.')[filename.split('.').length - 1];
     //Give image file a random name
