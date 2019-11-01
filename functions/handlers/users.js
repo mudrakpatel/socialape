@@ -1,6 +1,6 @@
 const firebase = require('firebase');
 
-const {db} = require('../util/admin');
+const {admin, db} = require('../util/admin');
 const {firebaseConfig} = require('../util/config');
 const {validateSignupData, validateLoginData} = require('../util/validators');
 
@@ -18,12 +18,14 @@ exports.signup = (request, response) => {
     confirmPassword: request.body.confirmPassword,
     handle: request.body.handle,
   };
-
   //Data validation
   const {valid, errors} = validateSignupData(newUser);
   if(!valid){
     return response.status(400).json(errors);
   }
+  //Associate default profile picture to the user.
+  //They can change this picture later.
+  const noImg = 'no-img.png';
 
   let token, userId;
   db
@@ -50,7 +52,10 @@ exports.signup = (request, response) => {
       handle: newUser.handle,
       email: newUser.email,
       createdAt: new Date().toISOString(),
-      userId: userId
+      imageURL: `https://firebasestorage.googleapis.com/v0/b/${
+        firebaseConfig.storageBucket
+      }/o/${noImg}?alt=media`,
+      userId: userId,
     };
     //Add userCredentials to users 
     //collection in firestore database
@@ -104,4 +109,63 @@ exports.login = (request, response) => {
         return response.status(500).json({error: err});
       }
     });
+};
+
+exports.uploadImage = (request, response) => {
+  //Imports
+  const BusBoy = require('busboy');
+  const path = require('path');
+  const os = require('os');
+  const fs = require('fs');
+  //Instantiate an instance of busboy
+  const busboy = new BusBoy({headers: request.headers});
+  let imageFileName;
+  let imageToBeUploaded = {};
+  //file event
+  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    console.log(`
+      fielsname: ${fieldname},\n
+      filename: ${filename},\n
+      mimetype: ${mimetype},\n
+    `);
+    //Get the extension of the image file
+    const imageExtension = filename.split('.')[filename.split('.').length - 1];
+    //Give image file a random name
+    imageFileName = `${Math.round(Math.random() * 1000000000000)}.${imageExtension}`;
+    //Get the filepath
+    const filepath = path.join(os.tmpdir(), imageFileName);
+    imageToBeUploaded = {filepath, mimetype};
+    //Create the image file
+    file.pipe(fs.createWriteStream(filepath));
+  });
+  //finish event
+  busboy.on('finish', () => {
+    //Upload the image
+    admin.storage().bucket().upload(imageToBeUploaded.filepath, {
+      resumable: false,
+      metadata: {
+        metadata: {
+          contentType: imageToBeUploaded.mimetype,
+        },
+      },
+    })
+    .then(() => {
+      //Construct the image URL to add it to the user
+      const imageURL = 
+      `https://firebasestorage.googleapis.com/v0/b/${firebaseConfig.storageBucket}/o/${imageFileName}?alt=media`;
+      //Add the imageURL to the appropriate
+      //user document in the users collection
+      return db
+        .doc(`/users/${request.user.handle}`)
+        .update({imageURL: imageURL});
+    })
+    .then((data) => {
+      return response.status(200).json({message: 'Image uploaded successfully'});
+    })
+    .catch((err) => {
+      return response.status(500).json({error: err});
+    });
+  });
+  //End the WriteableStream
+  busboy.end(request.rawBody);
 };
