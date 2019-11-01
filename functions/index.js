@@ -5,7 +5,12 @@ const app = require('express')();
 
 const {firebaseAuthMiddleware} = require('./middlewares/auth');
 const {getAllScreams, addScream} = require('./handlers/screams');
-const {signup, login, uploadImage} = require('./handlers/users');
+const {
+    signup,
+    login,
+    uploadImage,
+    addUserDetails
+} = require('./handlers/users');
 
 // Scream routes
 app.get('/screams', getAllScreams);
@@ -14,6 +19,7 @@ app.post('/scream', firebaseAuthMiddleware, addScream);
 app.post('/signup', signup);
 app.post('/login', login);
 app.post('/user/image', firebaseAuthMiddleware, uploadImage);
+app.post('/user', firebaseAuthMiddleware, addUserDetails);
 
 // Let Firebase know that app is 
 // the container for all our routes

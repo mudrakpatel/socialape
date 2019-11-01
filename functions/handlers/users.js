@@ -2,11 +2,16 @@ const firebase = require('firebase');
 
 const {admin, db} = require('../util/admin');
 const {firebaseConfig} = require('../util/config');
-const {validateSignupData, validateLoginData} = require('../util/validators');
+const {
+  validateSignupData,
+  validateLoginData,
+  reduceUserDetails
+} = require('../util/validators');
 
 // Initialize Firebase application
 firebase.initializeApp(firebaseConfig);
 
+//New user signup handler
 //INFO: DO NOT use firebase-tools v-7.0.2
 //      otherwise the signup route code will
 //      not return a token. Instead, use
@@ -75,6 +80,7 @@ exports.signup = (request, response) => {
   });
 };
 
+//Login handler
 exports.login = (request, response) => {
   const user = {
     email: request.body.email,
@@ -111,6 +117,7 @@ exports.login = (request, response) => {
     });
 };
 
+//Upload profile image handler
 exports.uploadImage = (request, response) => {
   //Imports
   const BusBoy = require('busboy');
@@ -169,4 +176,19 @@ exports.uploadImage = (request, response) => {
   });
   //End the WriteableStream
   busboy.end(request.rawBody);
+};
+
+//addUserDetails handler
+exports.addUserDetails = (request, response) => {
+  let userDetails = reduceUserDetails(request.body);
+  //Look for the logged in user
+  //and update the details
+  db.doc(`/users/${request.user.handle}`)
+    .update(userDetails).then(() => {
+      return response.status(200).json({
+        message: 'User details updated successfully',
+      });
+    }).catch((err) => {
+      return response.status(500).json({error: err});
+    });
 };
