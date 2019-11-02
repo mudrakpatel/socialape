@@ -44,3 +44,26 @@ exports.addScream = (request, response) => {
       });
     });
 };
+
+// Get a scream by screamId route parameter
+exports.getScream = (request, response) => {
+  let screamData = {};
+  db.doc(`/screams/${request.params.screamId}`)
+    .get().then((document) => {
+      if(!document.exists){
+        return response.status(404).json({error: 'Scream not found'});
+      }
+      screamData = document.data();
+      screamData.screamId = document.id;
+      return db.collection('comments').orderBy('createdAt', 'desc')
+      .where('screamId', '==', request.params.screamId).get();
+    }).then((data) => {
+      screamData.comments = [];
+      data.forEach((loopDocument) => {
+        screamData.comments.push(loopDocument.data());
+      });
+      return response.json(screamData);
+    }).catch((err) => {
+      return response.status(500).json({error: err});
+    });
+};
