@@ -67,3 +67,31 @@ exports.getScream = (request, response) => {
       return response.status(500).json({error: err});
     });
 };
+
+//Add a comment to a Scream
+exports.commentOnScream = (request, response) => {
+  if(request.body.body.trim() === ''){
+    return response.status(400).json({error: 'Comment must not be empty'});
+  }
+  const newComment = {
+    body: request.body.body,
+    createdAt: new Date().toISOString(),
+    screamId: request.params.screamId,
+    userHandle: request.user.handle,
+    userImage: request.user.imageURL,
+  };
+  //Check if the scream still exists.
+  //Might have been deleted so we need
+  //to check so we can handle the error.
+  db.doc(`/screams/${request.params.screamId}`).get()
+    .then((document) => {
+      if(!document.exists){
+        return response.status(404).json({error: 'Scream not found'});
+      }
+      return db.collection('comments').add(newComment);
+    }).then(() => {
+      return response.status(201).json(newComment);
+    }).catch((err) => {
+      return response.status(500).json({error: err});
+    });
+};

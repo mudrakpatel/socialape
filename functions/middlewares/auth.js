@@ -37,6 +37,7 @@ exports.firebaseAuthMiddleware = (request, response, next) => {
     .then((data) => {
       //Add handle property to the user object in request
       request.user.handle = data.docs[0].data().handle;
+      request.user.imageURL = data.docs[0].data().imageURL;
       //Call next() to proceed towards the route when 
       //this middleware execution is finished successfully.
       return next();

@@ -4,7 +4,12 @@ const functions = require('firebase-functions');
 const app = require('express')();
 
 const {firebaseAuthMiddleware} = require('./middlewares/auth');
-const { getAllScreams, addScream, getScream,} = require('./handlers/screams');
+const {
+    getAllScreams,
+    addScream,
+    getScream,
+    commentOnScream,
+} = require('./handlers/screams');
 const {
     signup,
     login,
@@ -17,6 +22,7 @@ const {
 app.get('/screams', getAllScreams);
 app.post('/scream', firebaseAuthMiddleware, addScream);
 app.get('/scream/:screamId', getScream);
+app.post('/scream/:screamId/comment', firebaseAuthMiddleware, commentOnScream);
 //Users routes
 app.post('/signup', signup);
 app.post('/login', login);
