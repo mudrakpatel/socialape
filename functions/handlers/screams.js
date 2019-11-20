@@ -23,10 +23,17 @@ exports.getAllScreams = (request, response) => {
 };
 
 exports.addScream = (request, response) => {
+  if(request.body.body.trim() === ''){
+    return response.status(400).json({body: 'Body must not be empty!'});
+  }
+
   const newScream = {
     body: request.body.body,
     userHandle: request.user.handle,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
+    userImage: request.user.imageURL,
+    likeCount: 0,
+    commentCount: 0,
   };
 
   // Add the Scream object to firestore database
@@ -34,9 +41,9 @@ exports.addScream = (request, response) => {
     .collection('screams')
     .add(newScream)
     .then(document => {
-      return response.status(201).json({
-        message: `Document: ${document.id} created successfully`
-      });
+      const responseScream = newScream;
+      responseScream.screamId = document.id;
+      return response.status(201).json(responseScream);
     })
     .catch(err => {
       return response.status(500).json({
@@ -94,4 +101,111 @@ exports.commentOnScream = (request, response) => {
     }).catch((err) => {
       return response.status(500).json({error: err});
     });
+};
+
+//Like a scream
+exports.likeScream = (request, response) => {
+  //Check whether the logged in user
+  //has liked this particular scream or not
+  const likeDocument = db.collection('likes')
+    .where('userHandle', '==', request.user.handle)
+    .where('screamId', '==', request.params.screamId)
+    .limit(1);
+
+  const screamDocument = db.doc(`/screams/${request.params.screamId}`);
+  let screamData;
+
+  //Check whether this scream document exists
+  screamDocument.get().then((document) => {
+    if(document.exists){
+      screamData = document.data();
+      screamData.screamId = document.id;
+      return likeDocument.get();
+    } else {
+      return response.status(404).json({error: 'Scream not found!'});
+    }
+  }).then((data) => {
+    //Check if the data array is empty.
+    //If it is empty, then we can create
+    //a like document to indicate that the
+    //currently logged in user has liked
+    //this particular scream.
+    if(data.empty){
+      return db.collection('likes').add({
+        screamId: request.params.screamId,
+        userHandle: request.user.handle,
+      }).then(() => {
+        screamData.likeCount++;
+        //Now update the likeCount property
+        //in the scream document associated
+        //with this scream.
+        return screamData.update({likeCount: screamData.likeCount});
+      }).then(() => {
+        return response.json(screamData);
+      });
+    } else {
+      //If the execution of this else
+      //block takes place then it means
+      //that the currently logged in
+      //user has already liked this
+      //particular scream so the server
+      //can return appropriate response.
+      return response.status(400).json({error: 'Scream already liked'});
+    }
+  }).catch((err) => {
+    return response.status(500).json({error: err});
+  });
+};
+
+//Unlike a scream
+exports.unlikeScream = (request, response) => {
+  //Check whether the logged in user
+  //has liked this particular scream or not
+  const likeDocument = db.collection('likes')
+    .where('userHandle', '==', request.user.handle)
+    .where('screamId', '==', request.params.screamId)
+    .limit(1);
+
+  const screamDocument = db.doc(`/screams/${request.params.screamId}`);
+  let screamData;
+
+  //Check whether this scream document exists
+  screamDocument.get().then((document) => {
+    if (document.exists) {
+      screamData = document.data();
+      screamData.screamId = document.id;
+      return likeDocument.get();
+    } else {
+      return response.status(404).json({
+        error: 'Scream not found!'
+      });
+    }
+  }).then((data) => {
+    //Check if the data array is empty.
+    if (data.empty) {
+      //If the above condition is true
+      //then it means that the currently
+      //logged in user has not liked this
+      //particular Scream so the user cannot
+      //unlike this Scream because to do
+      //that, the user who wants to unlike
+      //this Scream has to like this Scream to
+      //begin with.
+      return response.status(400).json({
+        error: 'Scream not liked'
+      });
+    } else {
+      return db.doc(`/likes/${data.docs[0].id}`).delete()
+        .then(() => {
+          screamData.likeCount--;
+          return screamDocument.update({likeCount: screamData.likeCount});
+        }).then(() => {
+          return response.json(screamData);
+        });
+    }
+  }).catch((err) => {
+    return response.status(500).json({
+      error: err
+    });
+  });
 };
