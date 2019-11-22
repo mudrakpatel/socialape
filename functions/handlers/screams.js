@@ -141,7 +141,7 @@ exports.likeScream = (request, response) => {
         //Now update the likeCount property
         //in the scream document associated
         //with this scream.
-        return screamData.update({likeCount: screamData.likeCount});
+        return screamDocument.update({likeCount: screamData.likeCount});
       }).then(() => {
         return response.json(screamData);
       });
@@ -207,7 +207,7 @@ exports.unlikeScream = (request, response) => {
     }
   }).catch((err) => {
     return response.status(500).json({
-      error: err
+      error: err.code
     });
   });
 };
