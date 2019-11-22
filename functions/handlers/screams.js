@@ -95,6 +95,8 @@ exports.commentOnScream = (request, response) => {
       if(!document.exists){
         return response.status(404).json({error: 'Scream not found'});
       }
+      return document.ref.update({commentCount: document.data().commentCount + 1});
+    }).then(() => {
       return db.collection('comments').add(newComment);
     }).then(() => {
       return response.status(201).json(newComment);
@@ -207,5 +209,32 @@ exports.unlikeScream = (request, response) => {
     return response.status(500).json({
       error: err
     });
+  });
+};
+
+//Delete a Scream
+exports.deleteScream = (request, response) => {
+  //Get a reference to the Scream document
+  const document = db.doc(`/screams/${request.params.screamId}`);
+  document.get().then((parameterDocument) => {
+    //Check if the query returned the document or not.
+    //If no document returned then it does not exist.
+    if(!parameterDocument.exists){
+      return response.status(404).json({error: 'Scream not found'});
+    }
+    //If the Scream is found, then verify that the
+    //user who created the Scream is the same user
+    //who is currently logged in because one user
+    //should not be able to delete scream posted
+    //by another user.
+    if(parameterDocument.data().userHandle !== request.user.handle){
+      return response.status(403).json({error: 'Unauthorized'});
+    } else {
+      return document.delete();
+    }
+  }).then(() => {
+    return response.json({message: 'Scream deleted successfully'});
+  }).catch((err) => {
+    return response.status(500).json({error: err});
   });
 };

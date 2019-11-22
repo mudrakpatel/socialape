@@ -11,6 +11,7 @@ const {
     commentOnScream,
     likeScream,
     unlikeScream,
+    deleteScream,
 } = require('./handlers/screams');
 const {
     signup,
@@ -27,6 +28,7 @@ app.get('/scream/:screamId', getScream);
 app.post('/scream/:screamId/comment', firebaseAuthMiddleware, commentOnScream);
 app.get('/scream/:screamId/like', firebaseAuthMiddleware, likeScream);
 app.get('/scream/:screamId/unlike', firebaseAuthMiddleware, unlikeScream);
+app.delete('/scream/:screamId', firebaseAuthMiddleware, deleteScream);
 //Users routes
 app.post('/signup', signup);
 app.post('/login', login);
