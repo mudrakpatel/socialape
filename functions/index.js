@@ -39,7 +39,7 @@ app.get('/user', firebaseAuthMiddleware, getAuthenticatedUser);
 
 //Notifications trigger functions
 //Create a notification document when a Scream is liked
-exports.createNotificationOnLike = functions.firestore.document('likes/${id}')
+exports.createNotificationOnLike = functions.firestore.document('likes/{id}')
     .onCreate((snapshot) => {
         db.doc(`/screams/${snapshot.data().screamId}`).get()
           .then((document) => {
@@ -68,7 +68,7 @@ exports.createNotificationOnLike = functions.firestore.document('likes/${id}')
 
 //Delete the notification for the Scream liked when
 //it is unliked by the same user who liked the Scream.
-exports.deleteNotificationOnUnLike = functions.firestore.document('likes/${id}')
+exports.deleteNotificationOnUnLike = functions.firestore.document('likes/{id}')
     .onDelete((snapshot) => {
         db.doc(`/notifications/${snapshot.id}`).delete().then(() => {
             return;
@@ -79,7 +79,7 @@ exports.deleteNotificationOnUnLike = functions.firestore.document('likes/${id}')
     });
 
 //Create a Notification when someone comments on a Scream
-exports.createNotificationOnComment = functions.firestore.document('comments/${id}')
+exports.createNotificationOnComment = functions.firestore.document('comments/{id}')
     .onCreate((snapshot) => {
         db.doc(`/screams/${snapshot.data().screamId}`).get()
             .then((document) => {
