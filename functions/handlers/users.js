@@ -210,7 +210,26 @@ exports.getAuthenticatedUser = (request, response) => {
       data.forEach(document => {
         userData.likes.push(document.data());
       });
-      return response.status(200).json(userData);
+      //Notifications needs to accessed so
+      //they can be shown on the front-end.
+      //Notifications limit: 10
+      return db.collection('notifications')
+        .where('recipient', '==', request.user.handle)
+        .orderBy('createdAt', 'desc').limit(10).get();
+    }).then((data) => {
+      userData.notifications = [];
+      data.forEach(document => {
+        userData.notifications.push({
+          recipient: document.data().recipient,
+          sender: document.data().sender,
+          createdAt: document.data().createdAt,
+          screamId: document.data().screamId,
+          type: document.data().type,
+          read: document.data().read,
+          notificationId: document.id,
+        });
+      });
+      return response.json(userData);
     }).catch((err) => {
       return response.status(500).json({error: err});
     });
