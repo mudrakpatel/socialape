@@ -234,3 +234,37 @@ exports.getAuthenticatedUser = (request, response) => {
       return response.status(500).json({error: err});
     });
 };
+
+//getUserDetails handler to get a user's details
+exports.getUserDetails = (request, response) => {
+  let userData = {};
+  db.doc(`/users/${request.params.handle}`).get()
+    .then((document) => {
+      //Check if the user exists
+      if(document.exists){
+        userData.user = document.data();
+        //Return the screams of the queried user
+        return db.collection('screams').where('userHandle', '==', request.params.handle)
+          .orderBy('createdAt', 'desc').get();
+      } else {
+        return response.status(404).json({error: 'User not found'});
+      }
+    }).then((data) => {
+      //Initialize the Screams of the queried user as an empty array.
+      userData.screams = [];
+      data.forEach(document => {
+        userData.screams.push({
+          body: document.data().body,
+          createdAt: document.data().createdAt,
+          userHandle: document.data().userHandle,
+          userImage: document.data().userImage,
+          likeCount: document.data().likeCount,
+          commentCount: document.data().commentCount,
+          screamId: document.id,
+        });
+      });
+      return response.json(userData);
+    }).catch((err) => {
+      return response.status(500).json({error: err});
+    });
+};

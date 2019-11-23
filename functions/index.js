@@ -20,7 +20,9 @@ const {
     uploadImage,
     addUserDetails,
     getAuthenticatedUser,
+    getUserDetails,
 } = require('./handlers/users');
+const { markNotificationsRead } = require('./handlers/notifications');
 
 // Scream routes
 app.get('/screams', getAllScreams);
@@ -36,6 +38,9 @@ app.post('/login', login);
 app.post('/user/image', firebaseAuthMiddleware, uploadImage);
 app.post('/user', firebaseAuthMiddleware, addUserDetails);
 app.get('/user', firebaseAuthMiddleware, getAuthenticatedUser);
+app.get('/user/:handle', getUserDetails);
+//Notifications routes
+app.post('/notifications', firebaseAuthMiddleware, markNotificationsRead);
 
 //Notifications trigger functions
 //Create a notification document when a Scream is liked
