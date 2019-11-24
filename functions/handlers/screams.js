@@ -6,13 +6,16 @@ exports.getAllScreams = (request, response) => {
     .orderBy('createdAt', 'desc')
     .get()
     .then(data => {
-      let screams = []
+      let screams = [];
       data.forEach(document => {
         screams.push({
           screamId: document.id,
           body: document.data().body,
           userHandle: document.data().userHandle,
-          createdAt: document.data().createdAt
+          createdAt: document.data().createdAt,
+          commentCount: document.data().commentCount,
+          likeCount: document.data().likeCount,
+          userImage: document.data().userImage,
         });
       });
       return response.status(200).json(screams);
@@ -78,7 +81,7 @@ exports.getScream = (request, response) => {
 //Add a comment to a Scream
 exports.commentOnScream = (request, response) => {
   if(request.body.body.trim() === ''){
-    return response.status(400).json({error: 'Comment must not be empty'});
+    return response.status(400).json({comment: 'Comment must not be empty'});
   }
   const newComment = {
     body: request.body.body,

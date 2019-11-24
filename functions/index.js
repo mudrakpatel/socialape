@@ -42,32 +42,32 @@ app.get('/user/:handle', getUserDetails);
 //Notifications routes
 app.post('/notifications', firebaseAuthMiddleware, markNotificationsRead);
 
+//Database triggers
+
 //Notifications trigger functions
 //Create a notification document when a Scream is liked
 exports.createNotificationOnLike = functions.firestore.document('likes/{id}')
     .onCreate((snapshot) => {
-        db.doc(`/screams/${snapshot.data().screamId}`).get()
+        return db.doc(`/screams/${snapshot.data().screamId}`).get()
           .then((document) => {
               //If the Scream document exists, create a notification
-              if(document.exists){
-                //Give the Notification document the
-                //same id as the like document.
-                return db.doc(`/notifications/${snapshot.id}`).set({
-                    createdAt: new Date().toISOString(),
-                    recipient: document.data().userHandle,
-                    sender: snapshot.data().userHandle,
-                    type: 'like',
-                    read: false,
-                    screamId: document.id,
-                });
+              if (document.exists && 
+                  document.data().userHandle !== snapshot.data().userHandle) {
+                    //Give the Notification document the
+                    //same id as the like document.
+                    return db.doc(`/notifications/${snapshot.id}`).set({
+                        createdAt: new Date().toISOString(),
+                        recipient: document.data().userHandle,
+                        sender: snapshot.data().userHandle,
+                        type: 'like',
+                        read: false,
+                        screamId: document.id,
+                    });
               }
-          }).then(() => {
-              return;
           }).catch((err) => {
               console.log(err);
               //No need to send a response because this a
               //database trigger and not an API endpoint.
-              return;
           });
     });
 
@@ -75,9 +75,7 @@ exports.createNotificationOnLike = functions.firestore.document('likes/{id}')
 //it is unliked by the same user who liked the Scream.
 exports.deleteNotificationOnUnLike = functions.firestore.document('likes/{id}')
     .onDelete((snapshot) => {
-        db.doc(`/notifications/${snapshot.id}`).delete().then(() => {
-            return;
-        }).catch((err) => {
+        return db.doc(`/notifications/${snapshot.id}`).delete().catch((err) => {
             console.log(err);
             return;
         });
@@ -86,26 +84,49 @@ exports.deleteNotificationOnUnLike = functions.firestore.document('likes/{id}')
 //Create a Notification when someone comments on a Scream
 exports.createNotificationOnComment = functions.firestore.document('comments/{id}')
     .onCreate((snapshot) => {
-        db.doc(`/screams/${snapshot.data().screamId}`).get()
+        return db.doc(`/screams/${snapshot.data().screamId}`).get()
             .then((document) => {
                 //If the Scream document exists, create a notification
-                if (document.exists) {
-                    //Give the Notification document the
-                    //same id as the comment document.
-                    return db.doc(`/notifications/${snapshot.id}`).set({
-                        createdAt: new Date().toISOString(),
-                        recipient: document.data().userHandle,
-                        sender: snapshot.data().userHandle,
-                        type: 'comment',
-                        read: false,
-                        screamId: document.id,
-                    });
+                if (document.exists &&
+                    document.data().userHandle !== snapshot.data().userHandle) {
+                        //Give the Notification document the
+                        //same id as the comment document.
+                        return db.doc(`/notifications/${snapshot.id}`).set({
+                            createdAt: new Date().toISOString(),
+                            recipient: document.data().userHandle,
+                            sender: snapshot.data().userHandle,
+                            type: 'comment',
+                            read: false,
+                            screamId: document.id,
+                        });
                 }
-            }).then(() => {
-                return;
             }).catch((err) => {
                 console.log(err);
                 return;
+            });
+    });
+
+//Database trigger to change userImage in all
+//Scream documents associated with this user
+exports.onUserImageChange = functions.firestore.document('/users/{userId}')
+    .onUpdate((change) => {
+        //change object holds two properties i.e.
+        //1) before it(snapshot) was edited and
+        //2) after it was edited.
+        //We want to change the userImage in
+        //multiple documents of screams collection
+        //so we can do a batch write.
+        let batch = db.batch();
+        return db.collection('screams')
+            //In each document of users collection
+            //the userHandle field of each document
+            //of screams collection, is called handle.
+            .where('userHandle', '==', change.before.data().handle).get()
+            .then((data) => {
+                data.forEach(document => {
+                    const scream = db.doc(`/screams/${document.id}`);
+                    batch.update(scream, {userImage: change.after.data().imageURL});
+                });
             });
     });
 
