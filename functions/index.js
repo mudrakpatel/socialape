@@ -116,19 +116,58 @@ exports.onUserImageChange = functions.firestore.document('/users/{userId}')
         //We want to change the userImage in
         //multiple documents of screams collection
         //so we can do a batch write.
-        let batch = db.batch();
-        return db.collection('screams')
-            //In each document of users collection
-            //the userHandle field of each document
-            //of screams collection, is called handle.
-            .where('userHandle', '==', change.before.data().handle).get()
-            .then((data) => {
-                data.forEach(document => {
-                    const scream = db.doc(`/screams/${document.id}`);
-                    batch.update(scream, {userImage: change.after.data().imageURL});
+        if(change.before.data().imageURL !== change.after.data().imageURL){
+            console.log('image has changed');            
+            const batch = db.batch();
+            return db.collection('screams')
+                //In each document of users collection
+                //the 'userHandle' field of each document
+                //of screams collection, is called 'handle'.
+                .where('userHandle', '==', change.before.data().handle).get()
+                .then((data) => {
+                    data.forEach(document => {
+                        const scream = db.doc(`/screams/${document.id}`);
+                        batch.update(scream, {userImage: change.after.data().imageURL});
+                    });
+                    return batch.commit();
                 });
-            });
+        }
     });
+
+//Database trigger to delete likes, comments and notifications
+//associated with a Scream when that Scream is deleted.
+exports.onScreamDelete = functions.firestore.document('/screams/{screamId}').onDelete((snapshot, context) => {
+    //context object has the URL parameters
+    const screamId = context.params.screamId;
+    const batch = db.batch();
+    return db.collection('comments').where('screamId', '==', screamId).get().then((data) => {
+        data.forEach(document => {
+            //Delete all comments posted on that Scream.
+            batch.delete(db.doc(`/comments/${document.id}`));
+        });
+        //Return all likes posted on that Scream.
+        //Deleting these likes will be handled in
+        //the next 'then' block.
+        return db.collection('likes').where('screamId', '==', screamId);
+    }).then((data) => {
+        data.forEach(document => {
+            //Delete all likes posted on that Scream.
+            batch.delete(db.doc(`/likes/${document.id}`));
+        });
+        //Return all notifications regarding that Scream.
+        //Deleting those notifications will be handled in
+        //the next 'then' block.
+        return db.collection('notifications').where('screamId', '==', screamId);
+    }).then((data) => {
+        data.forEach(document => {
+            batch.delete(db.doc(`/notifications/${document.id}`));
+        });
+        //Commit and return the batch commit after all the batch deletes.
+        return batch.commit();
+    }).catch((err) => {
+        console.error(err);
+    });
+});
 
 // Let Firebase know that app is 
 // the container for all our routes
