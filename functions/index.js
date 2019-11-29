@@ -113,6 +113,8 @@ exports.onUserImageChange = functions.firestore.document('/users/{userId}')
         //change object holds two properties i.e.
         //1) before it(snapshot) was edited and
         //2) after it was edited.
+        console.log(change.before.data());
+        console.log(change.after.data());
         //We want to change the userImage in
         //multiple documents of screams collection
         //so we can do a batch write.
@@ -131,6 +133,13 @@ exports.onUserImageChange = functions.firestore.document('/users/{userId}')
                     });
                     return batch.commit();
                 });
+        } else {
+            //To avoid 'function returned undefined. expected Promise or Value'
+            //error on firebase logs console.
+            //This means that if the above imageURL if condition is not satisfied,
+            //the error log will be still avoided in the firebase console.
+            //This can happen when the user updates any other data such as bio, location, etc.
+            return true;
         }
     });
 
@@ -148,7 +157,7 @@ exports.onScreamDelete = functions.firestore.document('/screams/{screamId}').onD
         //Return all likes posted on that Scream.
         //Deleting these likes will be handled in
         //the next 'then' block.
-        return db.collection('likes').where('screamId', '==', screamId);
+        return db.collection('likes').where('screamId', '==', screamId).get();
     }).then((data) => {
         data.forEach(document => {
             //Delete all likes posted on that Scream.
@@ -157,7 +166,7 @@ exports.onScreamDelete = functions.firestore.document('/screams/{screamId}').onD
         //Return all notifications regarding that Scream.
         //Deleting those notifications will be handled in
         //the next 'then' block.
-        return db.collection('notifications').where('screamId', '==', screamId);
+        return db.collection('notifications').where('screamId', '==', screamId).get();
     }).then((data) => {
         data.forEach(document => {
             batch.delete(db.doc(`/notifications/${document.id}`));
