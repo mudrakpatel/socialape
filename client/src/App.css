@@ -11,3 +11,11 @@ html, body{
     "Helvetica Neue",
     sans-serif;
 }
+
+.container{
+    margin-top: 80px;
+    margin-right: auto;
+    margin-bottom: 0;
+    margin-left: auto;
+    max-width: 1200px;
+}
