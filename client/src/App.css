@@ -19,3 +19,7 @@ html, body{
     margin-left: auto;
     max-width: 1200px;
 }
+
+.nav-container{
+    margin: auto;
+}
