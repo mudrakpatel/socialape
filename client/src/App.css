@@ -10,6 +10,7 @@ html, body{
     "Droid Sans",
     "Helvetica Neue",
     sans-serif;
+    background-color: rgb(245, 245, 245);
 }
 
 .container{
@@ -22,4 +23,8 @@ html, body{
 
 .nav-container{
     margin: auto;
+}
+
+a{
+    text-decoration: none;
 }
