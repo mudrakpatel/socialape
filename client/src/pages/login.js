@@ -16,7 +16,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 //can be accessed using 'classes.<propertyName>'
 //within this React Component template.
 const styles = (theme) => ({
-    ...theme,
+    ...theme.spreadThis,
 });
 
 class Login extends Component{

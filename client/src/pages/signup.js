@@ -16,7 +16,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 //can be accessed using 'classes.<propertyName>'
 //within this React Component template.
 const styles = (theme) => ({
-    ...theme,
+    ...theme.spreadThis,
 });
 
 class Signup extends Component{
@@ -108,7 +108,7 @@ class Signup extends Component{
                         </Button>
                         <br/>
                         <small>
-                            Don't have an account? Signup <Link to="/signup">here</Link>
+                            Already have an account? Login <Link to="/login">here</Link>
                         </small>
                     </form>
                 </Grid>
