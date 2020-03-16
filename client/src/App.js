@@ -2,69 +2,36 @@ import React from 'react';
 import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import MaterialThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
+import jwtDecode from 'jwt-decode'; //To decode firebse authentiction token
 
 import './App.css';
+//App theme
+import themeFile from './util/theme';
+import AuthRoute from './util/AuthRoute';
+//Components
 import Navbar from './components/Navbar';
 import Home from './pages/home';
 import Login from './pages/login';
 import Signup from './pages/signup';
 
 //Initialize a MaterialUI theme
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-        light: '#33c9dc',
-        main: '#00bcd4',
-        dark: '#008394',
-        contrastText: '#fff'
-      },
-      secondary: {
-        light: '#ff6333',
-        main: '#ff3d00',
-        dark: '#b22a00',
-        contrastText: '#fff'
-      },
-  },
-  //Other style data for Login and SignUp
-  spreadThis:{
-      typography: {
-          useNextVariants: true,
-        },
-        form: {
-          textAlign: 'center',
-        },
-        image: {
-          marginTop: '20px',
-          marginRight: 'auto',
-          marginBottom: '20px',
-          marginLeft: 'auto',
-        },
-        pageTitle: {
-          marginTop: '10px',
-          marginRight: 'auto',
-          marginBottom: '10px',
-          marginLeft: 'auto',
-        },
-        textField: {
-          marginTop: '10px',
-          marginRight: 'auto',
-          marginBottom: '10px',
-          marginLeft: 'auto',
-        },
-        button: {
-          marginTop: '20px',
-          position: 'relative',
-        },
-        customError: {
-          color: 'red',
-          fontSize: '0.8rem',
-          marginTop: 10,
-        },
-        progress: {
-          position: 'absolute',
-        },
-  },
-});
+const theme = createMuiTheme(themeFile);
+let authenticated;
+//Get Authentication token from localStorage object
+const token = localStorage.firebaseIdToken;
+//Check if the token exists
+//If the token exists, then decode the token
+if(token){
+  const decodedToken = jwtDecode(token);
+  //Check if the decoded token has expired or not
+  if(decodedToken.exp *1000 < Date.now()){
+    //Token expired so redirect user to the login page
+    window.location.href = '/login';
+    authenticated = false;
+  } else {
+    authenticated = true;
+  }
+}
 
 function App() {
   return (
@@ -75,8 +42,8 @@ function App() {
           <div className="container">
             <Switch>
               <Route exact path="/" component={Home}/>
-              <Route path="/signup" component={Signup}/>
-              <Route path="/login" component={Login}/>
+              <AuthRoute exact path="/signup" component={Signup} authenticated={authenticated}/>
+              <AuthRoute exact path="/login" component={Login} authenticated={authenticated}/>
             </Switch>
           </div>
         </BrowserRouter>
