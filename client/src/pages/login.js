@@ -76,10 +76,10 @@ class Login extends Component{
                     </Typography>
                     <form noValidate onSubmit={this.handleSubmit}>
                         <TextField id="email" name="email" type="email" label="Email" className={classes.textField}
-                            value={this.state.email} onChange={this.handleOnChange} fullWidth helperText={errors.email}
+                            value={this.state.email} onChange={() => this.handleOnChange} fullWidth helperText={errors.email}
                             error={errors.email ? true : false}/>
                         <TextField id="password" name="password" type="password" label="Password" className={classes.textField}
-                            value={this.state.password} onChange={this.handleOnChange} fullWidth helperText={errors.password}
+                            value={this.state.password} onChange={() => this.handleOnChange} fullWidth helperText={errors.password}
                             error={errors.password ? true : false}/>
                             {
                                 errors.general && (
