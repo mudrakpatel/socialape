@@ -3,8 +3,11 @@ import {BrowserRouter, Switch, Route} from 'react-router-dom';
 import MaterialThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
 import createMuiTheme from '@material-ui/core/styles/createMuiTheme';
 import jwtDecode from 'jwt-decode'; //To decode firebse authentiction token
-
 import './App.css';
+//Redux store provider
+import {Provider} from 'react-redux';
+//Redux store
+import store from './redux/store';
 //App theme
 import themeFile from './util/theme';
 import AuthRoute from './util/AuthRoute';
@@ -36,18 +39,21 @@ if(token){
 function App() {
   return (
     <MaterialThemeProvider theme={theme}>
-      <div className="App">
-        <BrowserRouter>
-          <Navbar/>
-          <div className="container">
-            <Switch>
-              <Route exact path="/" component={Home}/>
-              <AuthRoute exact path="/signup" component={Signup} authenticated={authenticated}/>
-              <AuthRoute exact path="/login" component={Login} authenticated={authenticated}/>
-            </Switch>
-          </div>
-        </BrowserRouter>
-      </div>
+      {/* Wrap the div and its child elements
+        inside a Store Provider so the child
+        elements can access the store */}
+      <Provider store={store}>
+          <BrowserRouter>
+            <Navbar/>
+            <div className="container">
+              <Switch>
+                <Route exact path="/" component={Home}/>
+                <AuthRoute exact path="/signup" component={Signup} authenticated={authenticated}/>
+                <AuthRoute exact path="/login" component={Login} authenticated={authenticated}/>
+              </Switch>
+            </div>
+          </BrowserRouter>
+      </Provider>
     </MaterialThemeProvider>
   );
 }

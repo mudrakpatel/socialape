@@ -25,7 +25,6 @@ class Login extends Component{
         this.state = {
             email: '',
             password: '',
-            loading: false,
             errors: {},
         };
     }
@@ -33,28 +32,10 @@ class Login extends Component{
     handleSubmit = (event) => {
         event.preventDefault();
         console.log('Login form submitted');
-        this.setState({
-            loading: true,
-        });
         const userData = {
             email: this.state.email,
             password: this.state.password,
         };
-        axios.post('/login', userData).then((result) => {
-            console.log(result);
-            //Store the token in the localStorage of the browser
-            localStorage.setItem('firebaseIdToken', `Bearer ${result.data.token}`);
-            this.setState({
-                loading: false,
-            });
-            //Redirect the user to the homepage after successfull login
-            this.props.history.push('/');
-        }).catch((err) => {
-            this.setState({
-                errors: err.response.data,
-                loading: false,
-            });
-        });
     };
 
     handleOnChange = (event) => {
