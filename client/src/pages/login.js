@@ -11,6 +11,9 @@ import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+//Redux imports
+import {connect} from 'react-redux';
+import {loginUser} from '../redux/actions/userActions';
 
 //The properties in this styles object
 //can be accessed using 'classes.<propertyName>'
@@ -36,6 +39,7 @@ class Login extends Component{
             email: this.state.email,
             password: this.state.password,
         };
+        this.props.loginUser(userData, this.props.history);
     };
 
     handleOnChange = (event) => {
@@ -45,8 +49,8 @@ class Login extends Component{
     };
 
     render(){
-        const {classes} = this.props;
-        const {errors, loading} = this.state;
+        const {classes, UI: {loading}} = this.props;
+        const {errors} = this.state;
         return(
             <Grid container className={classes.form}>
                 <Grid item sm/>
@@ -91,6 +95,23 @@ class Login extends Component{
 
 Login.propTypes = {
     classes: PropTypes.object.isRequired,
+    loginUser: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    UI: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(Login);
+//From global state take what we need
+const mapStateToProps = (state) => ({
+    user: state.user,
+    UI: state.UI,
+});
+
+//Take the actions that we are going to use
+const mapActionsToProps = {
+    loginUser
+};
+
+export default connect(
+    mapStateToProps,
+    mapActionsToProps
+)(withStyles(styles)(Login));
