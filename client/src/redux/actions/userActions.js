@@ -2,7 +2,14 @@
 file will be handled in appropriate reducers file**/
 import axios from 'axios';
 //Import action types
-import {SET_USER, SET_ERRORS, CLEAR_ERRORS, LOADING_UI, SET_UNAUTHENTICATED} from '../types';
+import {
+        SET_USER, 
+        SET_ERRORS, 
+        CLEAR_ERRORS, 
+        LOADING_UI, 
+        SET_UNAUTHENTICATED, 
+        LOADING_USER
+    } from '../types';
 
 //Login User Action
 /**dispatch is used to run asynchronous code
@@ -33,6 +40,7 @@ export const loginUser = (userData, history) => (dispatch) => {
 
 //Action to get User data
 export const getUserData = () => (dispatch) => {
+    dispatch({type: LOADING_USER});
     axios.get('/user').then((response) => {
         //Dispatch an action of type 'SET_USER'
         dispatch({type: SET_USER, payload: response.data});
