@@ -78,6 +78,16 @@ export const logoutUser = () => (dispatch) => {
     dispatch({type: SET_UNAUTHENTICATED});
 };
 
+//Action to upload an image
+export const uploadImage = (formData) => (dispatch) => {
+    dispatch({type: LOADING_USER});
+    axios.post('/user/image', formData).then(() => {
+        dispatch(getUserData());
+    }).catch((err) => {
+        console.log(err);
+    });
+};
+
 /**
  * Helper methods
  */
