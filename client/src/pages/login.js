@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import axios from 'axios';
 import AppIcon from '../images/icon.png';
 import {Link} from 'react-router-dom';
 //To bring global styles and access global theme
