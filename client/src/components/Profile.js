@@ -85,6 +85,7 @@ class Profile extends Component {
                         <div className={classes.profile}>
                             <div className="image-wrapper">
                                 <img src={imageURL} className="profile-image" alt="profile"/>
+                                <input type="file" id="imageInput" onChange={this.handleImageChange}/>
                             </div>
                             <hr/>
                             <div className="profile-details">
