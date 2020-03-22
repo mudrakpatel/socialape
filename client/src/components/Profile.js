@@ -14,10 +14,11 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 //Icons import
-import LocationOn from "@material-ui/icons/LocationOn";
-import LinkIcon from "@material-ui/icons/Link";
-import CalendarToday from "@material-ui/icons/CalendarToday";
-import EditIcon from "@material-ui/icons/Edit"
+import LocationOn from '@material-ui/icons/LocationOn';
+import LinkIcon from '@material-ui/icons/Link';
+import CalendarToday from '@material-ui/icons/CalendarToday';
+import EditIcon from '@material-ui/icons/Edit';
+import KeyboardReturn from '@material-ui/icons/KeyboardReturn';
 
 const styles = (theme) => ({
     paper: {
@@ -83,6 +84,10 @@ class Profile extends Component {
         fileInput.click();
     };
 
+    handleLogout = () => {
+        this.props.logoutUser();
+    };
+
     render(){
         const {
                 user: {
@@ -134,6 +139,12 @@ class Profile extends Component {
                                 <CalendarToday color="primary" />{' '}
                                 <span>Joined {dayjs(createdAt).format('MMM YYYY')}</span>
                             </div>
+                            <Tooltip title="Logout" placement="top">
+                                <IconButton onClick={this.handleLogout}>
+                                    <KeyboardReturn color="primary"/>
+                                </IconButton>
+                            </Tooltip>
+                            
                         </div>
                     </Paper>
                 ) : (
