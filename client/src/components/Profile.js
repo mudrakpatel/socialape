@@ -13,12 +13,14 @@ import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-//Icons import
+//Icons imports
 import LocationOn from '@material-ui/icons/LocationOn';
 import LinkIcon from '@material-ui/icons/Link';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import EditIcon from '@material-ui/icons/Edit';
 import KeyboardReturn from '@material-ui/icons/KeyboardReturn';
+//Components imports
+import EditDetails from './EditDetails';
 
 const styles = (theme) => ({
     paper: {
@@ -144,7 +146,7 @@ class Profile extends Component {
                                     <KeyboardReturn color="primary"/>
                                 </IconButton>
                             </Tooltip>
-                            
+                            <EditDetails/>
                         </div>
                     </Paper>
                 ) : (

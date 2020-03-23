@@ -88,6 +88,16 @@ export const uploadImage = (formData) => (dispatch) => {
     });
 };
 
+//Action to edit details of the logged in user
+export const editUserDetails = (userDetails) => (dispatch) => {
+    dispatch({type: LOADING_USER});
+    axios.post('/user', userDetails).then(() => {
+        dispatch(getUserData());
+    }).catch((err) => {
+        console.log(err);
+    });
+};
+
 /**
  * Helper methods
  */
