@@ -18,6 +18,8 @@ import Paper from '@material-ui/core/Paper';
 import EditIcon from '@material-ui/icons/Edit';
 //Actions imports
 import {editUserDetails} from '../redux/actions/userActions';
+//Utilities ('util' folder) imports
+import CustomTooltipButton from '../util/CustomTooltipButton';
 
 const styles = (theme) => ({
     ...theme.spreadThis,
@@ -96,16 +98,24 @@ class EditDetails extends Component{
         const {classes} = this.props;
         return(
             <Fragment>
-                <Tooltip title="Edit details" placement="top">
+                {
+                /*<Tooltip title="Edit details" placement="top">
                     <IconButton onClick={this.handleOpen} className={classes.button}>
                         <EditIcon color="primary"/>
                     </IconButton>
-                </Tooltip>
+                   </Tooltip>*/
+                }
+                <CustomTooltipButton tip="Edit Details" placement="top"
+                    onClick={this.handleOpen} 
+                    btnClassName={classes.button}>
+                        <EditIcon color="primary"/>
+                </CustomTooltipButton>
                 <Dialog open={this.state.open} onClose={this.handleClose} 
                     PaperComponent={PaperComponent} 
                     fullWidth
                     aria-labelledby="draggable-dialog-title"
-                    maxWidth="xs">
+                    maxWidth="xs"
+                    scroll="paper">
                         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">Edit your details</DialogTitle>
                         <DialogContent>
                             <form>

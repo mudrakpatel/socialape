@@ -11,8 +11,6 @@ import Button from '@material-ui/core/Button';
 import MUILink from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
 //Icons imports
 import LocationOn from '@material-ui/icons/LocationOn';
 import LinkIcon from '@material-ui/icons/Link';
@@ -21,6 +19,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import KeyboardReturn from '@material-ui/icons/KeyboardReturn';
 //Components imports
 import EditDetails from './EditDetails';
+//Utilities ('util' folder) imports
+import CustomTooltipButton from '../util/CustomTooltipButton';
 
 const styles = (theme) => ({
     paper: {
@@ -113,11 +113,9 @@ class Profile extends Component {
                             <div className="image-wrapper">
                                 <img src={imageURL} className="profile-image" alt="profile"/>
                                 <input type="file" id="imageInput" hidden="hidden" onChange={this.handleImageChange}/>
-                                <Tooltip title="Edit profile picture" placement="right-end">
-                                    <IconButton onClick={this.handleEditPicture} className="button">
-                                        <EditIcon color="primary"/>
-                                    </IconButton>
-                                </Tooltip>
+                                <CustomTooltipButton tip="Edit Profile picture" onClick={this.handleEditPicture} btnClassName="button">
+                                    <EditIcon color="primary"/>
+                                </CustomTooltipButton>
                             </div>
                             <hr/>
                             <div className="profile-details">
@@ -141,11 +139,9 @@ class Profile extends Component {
                                 <CalendarToday color="primary" />{' '}
                                 <span>Joined {dayjs(createdAt).format('MMM YYYY')}</span>
                             </div>
-                            <Tooltip title="Logout" placement="top">
-                                <IconButton onClick={this.handleLogout}>
-                                    <KeyboardReturn color="primary"/>
-                                </IconButton>
-                            </Tooltip>
+                            <CustomTooltipButton tip="Logout" onClick={this.handleLogout}>
+                                <KeyboardReturn color="primary"/>
+                            </CustomTooltipButton>
                             <EditDetails/>
                         </div>
                     </Paper>
