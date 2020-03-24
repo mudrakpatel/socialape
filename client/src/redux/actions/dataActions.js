@@ -13,7 +13,31 @@ export const getScreams = () => (dispatch) => {
     }).catch((err) => {
         dispatch({
             type: SET_SCREAMS,
-            payload: {},
+            payload: [],
         });
+    });
+};
+
+//Action to like a Scream
+export const likeScream = (screamId) => (dispatch) => {
+    axios.get(`/scream/${screamId}/like`).then((response) => {
+        dispatch({
+            type: LIKE_SCREAM,
+            payload: response.data,
+        });
+    }).catch((err) => {
+        console.log(err);
+    });
+};
+
+//Action to unlike a Scream
+export const unlikeScream = (screamId) => (dispatch) => {
+    axios.get(`/scream/${screamId}/unlike`).then((response) => {
+        dispatch({
+            type: UNLIKE_SCREAM,
+            payload: response.data,
+        });
+    }).catch((err) => {
+        console.log(err);
     });
 };
