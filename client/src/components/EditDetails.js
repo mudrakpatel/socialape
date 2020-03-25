@@ -29,13 +29,13 @@ const styles = (theme) => ({
 });
 
 function PaperComponent (props) {
-        console.log("Opening movable dialog");
-        return(
-            <Draggable handle="#draggable-dialog-title">
-                <Paper {...props}/>
-            </Draggable>
-        );
-    };
+    console.log("Opening movable dialog");
+    return(
+        <Draggable handle="#draggable-dialog-title">
+            <Paper {...props}/>
+        </Draggable>
+    );
+};
 
 class EditDetails extends Component{
     state = {

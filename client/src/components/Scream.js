@@ -9,6 +9,8 @@ import {connect} from 'react-redux';
 import {likeScream, unlikeScream} from '../redux/actions/dataActions';
 //Utilities ('util' folder) imports
 import CustomTooltipButton from '../util/CustomTooltipButton';
+//Component imports
+import DeleteScream from './DeleteScream';
 //MUI (Material UI) imports
 import withStyles from '@material-ui/core/styles/withStyles';
 import Card from '@material-ui/core/Card';
@@ -22,6 +24,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 const styles = {
     card: {
+        position: 'relative',
         display: 'flex',
         marginBottom: 20,
     },
@@ -73,6 +76,9 @@ class Scream extends Component {
             classes,
             user: {
                 authenticated,
+                credentials: {
+                    handle,
+                },
             },
             scream: {
                 body,
@@ -84,6 +90,7 @@ class Scream extends Component {
                 commentCount,
             }
         } = this.props;
+        //Like button
         const likeButton = !authenticated ? (
             <CustomTooltipButton tip="Like">
                 <Link to="/login">
@@ -106,6 +113,10 @@ class Scream extends Component {
                 </CustomTooltipButton>
             )
         );
+        //Delete button
+        const deleteButton = authenticated && userHandle === handle ? (
+            <DeleteScream screamId={screamId}/>
+        ) : (null);
         return (
             <Card className={classes.card}>
                 <CardMedia image={userImage} title="Profile image" className={classes.image} />
@@ -114,6 +125,7 @@ class Scream extends Component {
                         to={`/users/${userHandle}`} color="primary">
                         {userHandle}
                     </Typography>
+                    {deleteButton}
                     <Typography variant="body2" color="textSecondary">
                         {dayjs(createdAt).fromNow()}
                     </Typography>
