@@ -3,6 +3,8 @@ import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 //Redux imports
 import {connect} from 'react-redux';
+//Component imports
+import PostScream from './PostScream';
 //Utilities('util' folder) imports
 import CustomTooltipButton from '../util/CustomTooltipButton';
 //MUI(Material UI) imports
@@ -10,13 +12,11 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 //Icon imports
-import AddIcon from '@material-ui/icons/Add';
 import HomeIcon from '@material-ui/icons/Home';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 
 class Navbar extends Component{
     render(){
-        console.log(this.props);
         const {authenticated} = this.props;
         return(
             <AppBar> {/*default value for 'position' attribute is 'fixed'*/}
@@ -24,9 +24,7 @@ class Navbar extends Component{
                     {
                         authenticated ? (
                             <Fragment>
-                                <CustomTooltipButton tip="Post a Scream!">
-                                    <AddIcon/>
-                                </CustomTooltipButton>
+                                <PostScream/>
                                 <Link to="/">
                                     <CustomTooltipButton tip="Home">
                                         <HomeIcon/>
