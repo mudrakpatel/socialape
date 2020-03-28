@@ -5,13 +5,12 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import dayjs from 'dayjs';
 //Redux imports
 import {connect} from 'react-redux';
-//Action imports
-import {likeScream, unlikeScream} from '../redux/actions/dataActions';
 //Utilities ('util' folder) imports
 import CustomTooltipButton from '../util/CustomTooltipButton';
 //Component imports
 import DeleteScream from './DeleteScream';
 import ScreamDialog from './ScreamDialog';
+import LikeButton from './LikeButton';
 //MUI (Material UI) imports
 import withStyles from '@material-ui/core/styles/withStyles';
 import Card from '@material-ui/core/Card';
@@ -20,8 +19,6 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 //Icon imports
 import ChatIcon from '@material-ui/icons/Chat';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 
 const styles = {
     card: {
@@ -39,38 +36,6 @@ const styles = {
 };
 
 class Scream extends Component {
-
-    //Method to check if the logged in
-    //user has liked this particular scream
-    likedScream = () => {
-        const {user, scream} = this.props;
-        //Check if the user has any likes
-        //and check if this scream is liked
-        if(user.likes && user.likes.find(
-            (like) => like.screamId === scream.screamId
-        )){
-            return true;
-        }else{
-            return false;
-        }
-    };
-
-    //Method to like this scream
-    likeScream = () => {
-        /*NOTE: 'likeScream' destructured from 'this.props'
-                is the imported action from Redux store.*/
-        const {likeScream, scream} = this.props;
-        likeScream(scream.screamId);
-    };
-
-    //Method to unlike this scream
-    unlikeScream = () => {
-        /*NOTE: 'unlikeScream' destructured from 'this.props'
-                is the imported action from Redux store.*/
-        const {unlikeScream, scream} = this.props;
-        unlikeScream(scream.screamId);
-    };
-
     render(){
         dayjs.extend(relativeTime);
         const { 
@@ -92,28 +57,7 @@ class Scream extends Component {
             }
         } = this.props;
         //Like button
-        const likeButton = !authenticated ? (
-            <CustomTooltipButton tip="Like">
-                <Link to="/login">
-                    <FavoriteBorderIcon color="primary"/>
-                </Link>
-            </CustomTooltipButton>
-        ) : (
-            /*
-                The user is logged in, so 
-                now check if this scream is
-                liked or not by the logged in user.
-            */
-            this.likedScream() ? (
-                <CustomTooltipButton tip="Undo like" onClick={this.unlikeScream}>
-                    <FavoriteIcon color="primary"/>
-                </CustomTooltipButton>
-            ) : (
-                <CustomTooltipButton tip="Like" onClick={this.likeScream}>
-                    <FavoriteBorderIcon color="primary"/>
-                </CustomTooltipButton>
-            )
-        );
+        
         //Delete button
         const deleteButton = authenticated && userHandle === handle ? (
             <DeleteScream screamId={screamId}/>
@@ -133,7 +77,7 @@ class Scream extends Component {
                     <Typography variant="body1">
                         {body}
                     </Typography>
-                    {likeButton}
+                    <LikeButton screamId={screamId}/>
                     <span>
                         {likeCount} Likes
                     </span>
@@ -154,18 +98,13 @@ Scream.propTypes = {
     user: PropTypes.object.isRequired,
     scream: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
-    likeScream: PropTypes.func.isRequired,
-    unlikeScream: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
     user: state.user,
 });
 
-const mapActionsToProps = {
-    likeScream,
-    unlikeScream,
-};
+const mapActionsToProps = {};
 
 export default connect(
     mapStateToProps,

@@ -13,9 +13,12 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 //MUI (Material UI) icons imports
 import CloseIcon from '@material-ui/icons/Close';
+import ChatIcon from '@material-ui/icons/Chat';
 import UnfoldMore from '@material-ui/icons/UnfoldMore';
 //Redux imports
 import {connect} from 'react-redux';
+//Component imports
+import LikeButton from './LikeButton';
 //Utilities ('util' folder) imports
 import CustomTooltipButton from '../util/CustomTooltipButton';
 //Action imports
@@ -46,6 +49,15 @@ const styles = (theme) => ({
     },
     dialogContent: {
         padding: 20,
+    },
+    expandButton: {
+        position: 'absolute',
+        left: '90%'
+    },
+    spinnerDiv: {
+        textAlign: 'center',
+        marginTop: 50,
+        marginBottom: 50,
     },
 });
 
@@ -84,7 +96,12 @@ class ScreamDialog extends Component{
         const {open} = this.state;
         //Dialog markup
         const dialogMarkup = loading ? (
-            <CircularProgress size={200}/>
+            <div className={classes.spinnerDiv}>
+                <CircularProgress 
+                    size={200}
+                    thickness={2}
+                />
+            </div>
         ) : (
             <Grid
                 container
@@ -123,6 +140,16 @@ class ScreamDialog extends Component{
                                 variant="body1">
                                     {body}
                             </Typography>
+                            <LikeButton screamId={screamId}/>
+                            <span>
+                                {likeCount} likes
+                            </span>
+                            <CustomTooltipButton tip="Comments">
+                                <ChatIcon color="primary" />
+                            </CustomTooltipButton>
+                            <span>
+                                {commentCount} comments
+                            </span>
                     </Grid>
             </Grid>
         );
