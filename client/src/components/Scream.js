@@ -11,6 +11,7 @@ import {likeScream, unlikeScream} from '../redux/actions/dataActions';
 import CustomTooltipButton from '../util/CustomTooltipButton';
 //Component imports
 import DeleteScream from './DeleteScream';
+import ScreamDialog from './ScreamDialog';
 //MUI (Material UI) imports
 import withStyles from '@material-ui/core/styles/withStyles';
 import Card from '@material-ui/core/Card';
@@ -142,6 +143,7 @@ class Scream extends Component {
                     <span>
                         {commentCount} comments
                     </span>
+                    <ScreamDialog screamId={screamId} userHandle={userHandle}/>
                 </CardContent>
             </Card>
         );

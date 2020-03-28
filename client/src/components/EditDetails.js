@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 //MUI(Material UI) imports
 import withStyles from '@material-ui/core/styles/withStyles';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -29,7 +27,6 @@ const styles = (theme) => ({
 });
 
 function PaperComponent (props) {
-    console.log("Opening movable dialog");
     return(
         <Draggable handle="#draggable-dialog-title">
             <Paper {...props}/>

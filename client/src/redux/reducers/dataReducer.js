@@ -4,6 +4,7 @@
 //Import Action types
 import {
     SET_SCREAMS,
+    SET_SCREAM,
     LIKE_SCREAM,
     UNLIKE_SCREAM,
     DELETE_SCREAM,
@@ -24,6 +25,13 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 loading: true,
+            }
+        }
+        case SET_SCREAM:{
+            return {
+                ...state,
+                scream: action.payload,
+                loading: false,
             }
         }
         case SET_SCREAMS:{

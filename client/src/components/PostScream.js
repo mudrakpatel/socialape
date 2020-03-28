@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 //Redux imports
 import {connect} from 'react-redux';
 //Actions imports
-import {postScream} from '../redux/actions/dataActions';
+import {postScream, clearErrors} from '../redux/actions/dataActions';
 //Utilities ('util' folder) imports
 import CustomTooltipButton from '../util/CustomTooltipButton';
 //Icon imports
@@ -32,14 +32,11 @@ const styles = (theme) => ({
     ...theme.spreadThis,
     submitButton: {
         position: 'relative',
+        float: 'right',
+        marginTop: 10,
     },
     progressSpinner: {
         position: 'absolute',
-    },
-    closeButton: {
-        position: 'absolute',
-        left: '90%',
-        top: '10%',
     },
 });
 
@@ -57,8 +54,11 @@ class PostScream extends Component{
             });
         }
         if(!nextProps.UI.errors && !nextProps.UI.loading){
-            this.setState({body: "",});
-            this.handleClose();
+            this.setState({
+                body: "",
+                open: false,
+                errors: {},
+            });
         }
     }
 
@@ -67,6 +67,8 @@ class PostScream extends Component{
     };
 
     handleClose = () => {
+        const {clearErrors} = this.props;
+        clearErrors();
         this.setState({
             open: false,
             errors: {},
@@ -141,6 +143,7 @@ class PostScream extends Component{
 
 PostScream.propTypes = {
     postScream: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired,
     UI: PropTypes.object.isRequired,
 };
 
@@ -150,6 +153,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
     postScream,
+    clearErrors,
 };
 
 export default connect(
