@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import {Link} from 'react-router-dom';
 import dayjs from 'dayjs';
 //Action imports
-import {uploadImage, logoutUser} from '../redux/actions/userActions';
+import {uploadImage, logoutUser} from '../../redux/actions/userActions';
 //MUI (Material UI) imports
 import Button from '@material-ui/core/Button';
 import MUILink from '@material-ui/core/Link';
@@ -20,7 +20,7 @@ import KeyboardReturn from '@material-ui/icons/KeyboardReturn';
 //Components imports
 import EditDetails from './EditDetails';
 //Utilities ('util' folder) imports
-import CustomTooltipButton from '../util/CustomTooltipButton';
+import CustomTooltipButton from '../../util/CustomTooltipButton';
 
 const styles = (theme) => ({
     paper: {

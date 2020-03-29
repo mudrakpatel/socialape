@@ -15,9 +15,9 @@ import Paper from '@material-ui/core/Paper';
 //Icons imports
 import EditIcon from '@material-ui/icons/Edit';
 //Actions imports
-import {editUserDetails} from '../redux/actions/userActions';
+import {editUserDetails} from '../../redux/actions/userActions';
 //Utilities ('util' folder) imports
-import CustomTooltipButton from '../util/CustomTooltipButton';
+import CustomTooltipButton from '../../util/CustomTooltipButton';
 
 const styles = (theme) => ({
     ...theme.spreadThis,

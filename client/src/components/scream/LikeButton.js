@@ -9,9 +9,9 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 //Redux imports
 import {connect} from 'react-redux';
 //Utilities ('util' folder) imports
-import CustomTooltipButton from '../util/CustomTooltipButton';
+import CustomTooltipButton from '../../util/CustomTooltipButton';
 //Action imports
-import {likeScream, unlikeScream} from '../redux/actions/dataActions';
+import {likeScream, unlikeScream} from '../../redux/actions/dataActions';
 
 
 class LikeButton extends Component{

@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 //Redux imports
 import {connect} from 'react-redux';
 //Actions imports
-import {postScream, clearErrors} from '../redux/actions/dataActions';
+import {postScream, clearErrors} from '../../redux/actions/dataActions';
 //Utilities ('util' folder) imports
-import CustomTooltipButton from '../util/CustomTooltipButton';
+import CustomTooltipButton from '../../util/CustomTooltipButton';
 //Icon imports
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';

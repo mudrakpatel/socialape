@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 //Redux imports
 import {connect} from 'react-redux';
 //Utilities ('util' folder) imports
-import CustomTooltipButton from '../util/CustomTooltipButton';
+import CustomTooltipButton from '../../util/CustomTooltipButton';
 //Component imports
 import DeleteScream from './DeleteScream';
 import ScreamDialog from './ScreamDialog';

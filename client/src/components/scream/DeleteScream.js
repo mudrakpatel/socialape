@@ -4,9 +4,9 @@ import Draggable from 'react-draggable';
 //Redux imports
 import {connect} from 'react-redux';
 //Utilities ('util' folder) imports
-import CustomTooltipButtom from '../util/CustomTooltipButton';
+import CustomTooltipButtom from '../../util/CustomTooltipButton';
 //Actions imports
-import {deleteScream} from '../redux/actions/dataActions';
+import {deleteScream} from '../../redux/actions/dataActions';
 //MUI (Material UI) imports
 import withStyles from '@material-ui/core/styles/withStyles';
 import Button from '@material-ui/core/Button';

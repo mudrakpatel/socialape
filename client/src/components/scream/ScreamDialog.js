@@ -19,10 +19,11 @@ import UnfoldMore from '@material-ui/icons/UnfoldMore';
 import {connect} from 'react-redux';
 //Component imports
 import LikeButton from './LikeButton';
+import Comments from './Comments';
 //Utilities ('util' folder) imports
-import CustomTooltipButton from '../util/CustomTooltipButton';
+import CustomTooltipButton from '../../util/CustomTooltipButton';
 //Action imports
-import {getScream} from '../redux/actions/dataActions';
+import {getScream} from '../../redux/actions/dataActions';
 import Paper from '@material-ui/core/Paper';
 
 const PaperComponent = (props) => {
@@ -36,10 +37,6 @@ const PaperComponent = (props) => {
 
 const styles = (theme) => ({
     ...theme.spreadThis,
-    invisibleSeparator: {
-        border: 'none',
-        margin: 4,
-    },
     profileImage: {
         top: '5%',
         maxWidth: 200,
@@ -88,6 +85,7 @@ class ScreamDialog extends Component{
                 commentCount,
                 userImage,
                 userHandle,
+                comments,
             },
             UI: {
                 loading,
@@ -151,6 +149,12 @@ class ScreamDialog extends Component{
                                 {commentCount} comments
                             </span>
                     </Grid>
+                    <hr 
+                        className={classes.visibleSeparator}
+                    />
+                    <Comments 
+                        comments={comments}
+                    />
             </Grid>
         );
         return(

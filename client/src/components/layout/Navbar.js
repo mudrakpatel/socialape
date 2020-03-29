@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 //Redux imports
 import {connect} from 'react-redux';
 //Component imports
-import PostScream from './PostScream';
+import PostScream from '../scream/PostScream';
 //Utilities('util' folder) imports
-import CustomTooltipButton from '../util/CustomTooltipButton';
+import CustomTooltipButton from '../../util/CustomTooltipButton';
 //MUI(Material UI) imports
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
