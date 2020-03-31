@@ -20,10 +20,11 @@ import {connect} from 'react-redux';
 //Component imports
 import LikeButton from './LikeButton';
 import Comments from './Comments';
+import CommentForm from './CommentForm';
 //Utilities ('util' folder) imports
 import CustomTooltipButton from '../../util/CustomTooltipButton';
 //Action imports
-import {getScream} from '../../redux/actions/dataActions';
+import {getScream, clearErrors} from '../../redux/actions/dataActions';
 import Paper from '@material-ui/core/Paper';
 
 const PaperComponent = (props) => {
@@ -70,11 +71,12 @@ class ScreamDialog extends Component{
     };
 
     handleClose = () => {
+        const {clearErrors} = this.props;
         this.setState({open: false});
+        clearErrors();
     };
 
     render(){
-        console.log(this.props);
         const {
             classes,
             scream: {
@@ -152,6 +154,7 @@ class ScreamDialog extends Component{
                     <hr 
                         className={classes.visibleSeparator}
                     />
+                    <CommentForm screamId={screamId}/>
                     <Comments 
                         comments={comments}
                     />
@@ -195,6 +198,7 @@ class ScreamDialog extends Component{
 
 ScreamDialog.propTypes = {
     getScream: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired,
     screamId: PropTypes.string.isRequired,
     userHandle: PropTypes.string.isRequired,
     scream: PropTypes.object.isRequired,
@@ -208,6 +212,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
     getScream,
+    clearErrors,
 };
 
 

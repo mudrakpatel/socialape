@@ -10,6 +10,7 @@ import {
     DELETE_SCREAM,
     LOADING_DATA,
     POST_SCREAM,
+    SUBMIT_COMMENT,
 } from '../types';
 
 //Initial state of the data reducer
@@ -68,6 +69,18 @@ export default (state = initialState, action) => {
                     action.payload,
                     ...state.screams,
                 ],
+            }
+        }
+        case SUBMIT_COMMENT:{
+            return{
+                ...state,
+                scream:{
+                    ...state.scream,
+                    comments: [
+                        action.payload,
+                        ...state.scream.comments,
+                    ],
+                },
             }
         }
         default:

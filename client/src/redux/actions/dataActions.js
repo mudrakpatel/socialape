@@ -12,6 +12,7 @@ import {
     CLEAR_ERRORS,
     SET_SCREAM,
     STOP_LOADING_UI,
+    SUBMIT_COMMENT,
 } from '../types';
 
 //Action to get one Scream
@@ -88,7 +89,23 @@ export const postScream = (newScream) => (dispatch) => {
             type: POST_SCREAM,
             payload: response.data,
         });
-        dispatch({type: CLEAR_ERRORS});
+        dispatch(clearErrors());
+    }).catch((err) => {
+        dispatch({
+            type: SET_ERRORS,
+            payload: err.response.data,
+        });
+    });
+};
+
+//Comment on a Scream
+export const submitComment = (screamId, commentData) => (dispatch) => {
+    axios.post(`/scream/${screamId}/comment`, commentData).then((response) => {
+        dispatch({
+            type: SUBMIT_COMMENT,
+            payload: response.data,
+        });
+        dispatch(clearErrors());
     }).catch((err) => {
         dispatch({
             type: SET_ERRORS,
