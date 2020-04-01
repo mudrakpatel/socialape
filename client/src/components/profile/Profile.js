@@ -11,63 +11,20 @@ import Button from '@material-ui/core/Button';
 import MUILink from '@material-ui/core/Link';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-//Icons imports
+//Icon imports
 import LocationOn from '@material-ui/icons/LocationOn';
 import LinkIcon from '@material-ui/icons/Link';
 import CalendarToday from '@material-ui/icons/CalendarToday';
 import EditIcon from '@material-ui/icons/Edit';
 import KeyboardReturn from '@material-ui/icons/KeyboardReturn';
 //Components imports
+import ProfileSkeleton from '../../util/ProfileSkeleton';
 import EditDetails from './EditDetails';
 //Utilities ('util' folder) imports
 import CustomTooltipButton from '../../util/CustomTooltipButton';
 
 const styles = (theme) => ({
-    paper: {
-            padding: 20
-        },
-        profile: {
-            '& .image-wrapper': {
-                textAlign: 'center',
-                position: 'relative',
-                '& button': {
-                    position: 'absolute',
-                    top: '80%',
-                    left: '70%'
-                }
-            },
-            '& .profile-image': {
-                width: 200,
-                height: 200,
-                objectFit: 'cover',
-                maxWidth: '100%',
-                borderRadius: '50%'
-            },
-            '& .profile-details': {
-                textAlign: 'center',
-                '& span, svg': {
-                    verticalAlign: 'middle'
-                },
-                '& a': {
-                    color: '#00bcd4'
-                }
-            },
-            '& hr': {
-                border: 'none',
-                margin: '0 0 10px 0'
-            },
-            '& svg.button': {
-                '&:hover': {
-                    cursor: 'pointer'
-                }
-            }
-        },
-        buttons: {
-            textAlign: 'center',
-            '& a': {
-                margin: '20px 10px'
-            }
-        }
+    ...theme.spreadThis,
 });
 
 class Profile extends Component {
@@ -155,7 +112,7 @@ class Profile extends Component {
                     </Paper>
                 )
             ) : (
-            <p>loading...</p>
+            <ProfileSkeleton/>
         );
 
         return profileMarkup;

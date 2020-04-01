@@ -2,6 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 //Component imports
+import ScreamSkeleton from '../../util/ScreamSkeleton';
+import ProfileSkeleton from '../../util/ProfileSkeleton';
 import StaticProfile from './StaticProfile';
 import Scream from '../scream/Scream';
 //Material UI (MUI) imports
@@ -42,7 +44,7 @@ class User extends Component{
         const {screams, loading} = this.props.data;
         const {profile, screamIdParam} = this.state;
         const screamsMarkup = loading ? (
-            <p>Loading data...</p>
+            <ScreamSkeleton/>
         ) : screams === null ? (
             <p>No screams from this user</p>
         ) : !screamIdParam ? (
@@ -64,7 +66,7 @@ class User extends Component{
                 <Grid item sm={4} xs={12}>
                     {
                         profile === null ? (
-                            <p>Loading profile...</p>
+                            <ProfileSkeleton/>
                         ) : (
                             <StaticProfile profile={profile}/>
                         )
