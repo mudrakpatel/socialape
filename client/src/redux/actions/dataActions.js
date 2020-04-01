@@ -114,6 +114,22 @@ export const submitComment = (screamId, commentData) => (dispatch) => {
     });
 };
 
+//Action to get other user data
+export const getOtherUserData = (userHandle) => (dispatch) => {
+    dispatch({type: LOADING_DATA,});
+    axios.get(`/user/${userHandle}`).then((response) => {
+        dispatch({
+            type: SET_SCREAMS,
+            payload: response.data.screams,
+        });
+    }).catch(() => {
+        dispatch({
+            type: SET_SCREAMS,
+            payload: null,
+        });
+    });
+};
+
 //Action to clear errors from state
 export const clearErrors = () => (dispatch) => {
     dispatch({type: CLEAR_ERRORS});

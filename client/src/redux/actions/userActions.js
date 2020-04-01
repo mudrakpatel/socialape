@@ -38,7 +38,7 @@ export const loginUser = (userData, history) => (dispatch) => {
     });
 };
 
-//Action to get User data
+//Action to get logged in User data
 export const getUserData = () => (dispatch) => {
     dispatch({type: LOADING_USER});
     axios.get('/user').then((response) => {

@@ -15,6 +15,8 @@ import themeFile from './util/theme';
 import AuthRoute from './util/AuthRoute';
 //Components
 import Navbar from './components/layout/Navbar';
+import User from './components/profile/User';
+//Pages
 import Home from './pages/home';
 import Login from './pages/login';
 import Signup from './pages/signup';
@@ -54,6 +56,7 @@ function App() {
                 <Route exact path="/" component={Home}/>
                 <AuthRoute exact path="/signup" component={Signup} />
                 <AuthRoute exact path="/login" component={Login} />
+                <Route exact path="/users/:handle" component={User}/>
               </Switch>
             </div>
           </BrowserRouter>
