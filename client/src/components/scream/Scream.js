@@ -54,7 +54,8 @@ class Scream extends Component {
                 screamId,
                 likeCount,
                 commentCount,
-            }
+            },
+            openDialog,
         } = this.props;
         //Like button
         
@@ -87,7 +88,7 @@ class Scream extends Component {
                     <span>
                         {commentCount} comments
                     </span>
-                    <ScreamDialog screamId={screamId} userHandle={userHandle}/>
+                    <ScreamDialog screamId={screamId} userHandle={userHandle} openDialog={openDialog}/>
                 </CardContent>
             </Card>
         );
@@ -98,6 +99,7 @@ Scream.propTypes = {
     user: PropTypes.object.isRequired,
     scream: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
+    openDialog: PropTypes.bool,
 };
 
 const mapStateToProps = (state) => ({
