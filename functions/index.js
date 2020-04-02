@@ -13,6 +13,7 @@ const {
     likeScream,
     unlikeScream,
     deleteScream,
+    deleteComment,
 } = require('./handlers/screams');
 const {
     signup,
@@ -29,6 +30,7 @@ app.get('/screams', getAllScreams);
 app.post('/scream', firebaseAuthMiddleware, addScream);
 app.get('/scream/:screamId', getScream);
 app.post('/scream/:screamId/comment', firebaseAuthMiddleware, commentOnScream);
+app.delete('/comment/:commentId', firebaseAuthMiddleware, deleteComment);
 app.get('/scream/:screamId/like', firebaseAuthMiddleware, likeScream);
 app.get('/scream/:screamId/unlike', firebaseAuthMiddleware, unlikeScream);
 app.delete('/scream/:screamId', firebaseAuthMiddleware, deleteScream);

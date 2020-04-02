@@ -101,11 +101,42 @@ exports.commentOnScream = (request, response) => {
       return document.ref.update({commentCount: document.data().commentCount + 1});
     }).then(() => {
       return db.collection('comments').add(newComment);
-    }).then(() => {
+    }).then((documentReference) => {
+      newComment.commentId = documentReference.id;
       return response.status(201).json(newComment);
     }).catch((err) => {
       return response.status(500).json({error: err});
     });
+};
+
+exports.deleteComment = (request, response) => {
+  //Get a reference to the comment document
+  const commentDocument = db.doc(`/comments/${request.params.commentId}`);
+  commentDocument.get().then((parameterDocument) => {
+    //Check if the query returned the document or not.
+    //If no document returned then it does not exist.
+    if (!parameterDocument.exists) {
+      return response.status(404).json({
+        error: 'Comment not found'
+      });
+    }
+    //If the Comment is found, then verify that the
+    //user who posted the comment is the same user
+    //who is currently logged in. Because one user
+    //should not be able to delete a comment posted
+    //by another user.
+    if (parameterDocument.data().userHandle !== request.user.handle) {
+      return response.status(403).json({
+        error: 'Unauthorized'
+      });
+    } else {
+      return commentDocument.delete();
+    }
+  }).then(() => {
+    return response.json({message: "Comment deleted successfully"});
+  }).catch((err) => {
+    return response.status(500).json({error: err.message});
+  });
 };
 
 //Like a scream
