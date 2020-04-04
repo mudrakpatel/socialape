@@ -1,5 +1,7 @@
+//Import the initialized firestore database
 const {db} = require('../util/admin');
 
+//Handler to get all Screams from the database
 exports.getAllScreams = (request, response) => {
   db
     .collection('screams')
@@ -25,6 +27,7 @@ exports.getAllScreams = (request, response) => {
     });
 };
 
+//handler to add a Scream to the database
 exports.addScream = (request, response) => {
   if(request.body.body.trim() === ''){
     return response.status(400).json({body: 'Body must not be empty!'});
@@ -55,7 +58,7 @@ exports.addScream = (request, response) => {
     });
 };
 
-// Get a scream by screamId route parameter
+// Handler to get a scream by screamId route parameter
 exports.getScream = (request, response) => {
   let screamData = {};
   db.doc(`/screams/${request.params.screamId}`)
@@ -109,6 +112,7 @@ exports.commentOnScream = (request, response) => {
     });
 };
 
+//Handler to delete a comment posted on a Scream
 exports.deleteComment = (request, response) => {
   //Get a reference to the comment document
   const commentDocument = db.doc(`/comments/${request.params.commentId}`);
@@ -144,6 +148,8 @@ exports.deleteComment = (request, response) => {
             });
           }
         });
+      //Delete the comment document
+      //from the firestore database.
       return commentDocument.delete();
     }
   }).then(() => {
@@ -153,7 +159,7 @@ exports.deleteComment = (request, response) => {
   });
 };
 
-//Like a scream
+//Handler to like a Scream
 exports.likeScream = (request, response) => {
   //Check whether the logged in user
   //has liked this particular scream or not
@@ -207,7 +213,7 @@ exports.likeScream = (request, response) => {
   });
 };
 
-//Unlike a scream
+//Handler to unlike a Scream
 exports.unlikeScream = (request, response) => {
   //Check whether the logged in user
   //has liked this particular scream or not
@@ -260,7 +266,7 @@ exports.unlikeScream = (request, response) => {
   });
 };
 
-//Delete a Scream
+//Handler to delete a Scream
 exports.deleteScream = (request, response) => {
   //Get a reference to the Scream document
   const document = db.doc(`/screams/${request.params.screamId}`);

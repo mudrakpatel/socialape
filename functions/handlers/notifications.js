@@ -1,5 +1,7 @@
+//Import initialized firestore database
 const {db} = require('../util/admin');
 
+//Handler to mark notification read to true
 exports.markNotificationsRead = (request, response) => {
     //Do a batch write i.e.
     //update multiple documents in firebase.

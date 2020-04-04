@@ -1,10 +1,13 @@
+//Import firebase-functions for writing database triggers
 const functions = require('firebase-functions');
 //Require express and call the 
 //express function in the sameline
 const app = require('express')();
-
+//Import the initialized firestore database
 const {db} = require('./util/admin');
+//Import custom authentication middleware
 const {firebaseAuthMiddleware} = require('./middlewares/auth');
+//Import Scream handlers
 const {
     getAllScreams,
     addScream,
@@ -15,6 +18,7 @@ const {
     deleteScream,
     deleteComment,
 } = require('./handlers/screams');
+//Import User handlers
 const {
     signup,
     login,
@@ -23,6 +27,7 @@ const {
     getAuthenticatedUser,
     getUserDetails,
 } = require('./handlers/users');
+//Import Notifications handlers
 const { markNotificationsRead } = require('./handlers/notifications');
 
 // Scream routes
