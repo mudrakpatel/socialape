@@ -130,6 +130,20 @@ exports.deleteComment = (request, response) => {
         error: 'Unauthorized'
       });
     } else {
+      //Decrement comment count by 1
+      //of the associated Scream.
+      db.doc(`/screams/${parameterDocument.data().screamId}`)
+        .get().then((screamDocument) => {
+          if(screamDocument.data().commentCount === 0){
+            return response.status(500).json({
+              error: 'Comment cannot be deleted due to internal server error',
+            });
+          } else {
+            screamDocument.ref.update({
+              commentCount: screamDocument.data().commentCount - 1
+            });
+          }
+        });
       return commentDocument.delete();
     }
   }).then(() => {
