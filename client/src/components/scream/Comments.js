@@ -2,10 +2,14 @@ import React, {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import dayjs from 'dayjs';
+//Utilities ('Util' folder) imports
+import CustomTooltipButtom from '../../util/CustomTooltipButton';
 //MUI (Material UI) imports
 import withStyles from '@material-ui/core/styles/withStyles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+//Icon imports
+import DeleteIcon from '@material-ui/icons/DeleteOutline';
 
 const styles = (theme) => ({
     ...theme.spreadThis,
@@ -18,9 +22,22 @@ const styles = (theme) => ({
     commentData: {
         marginLeft: 20,
     },
+    grid2: {
+        position: 'relative',
+    },
+    deleteButton: {
+        top: '-16%',
+        left: '90%',
+        position: 'absolute'
+    },
 });
 
 class Comments extends Component{
+
+    handleOnClick = () => {
+        
+    };
+
     render(){
         const {
             comments, 
@@ -37,6 +54,7 @@ class Comments extends Component{
                                     createdAt,
                                     userImage,
                                     userHandle,
+                                    commentId,
                                 } = comment;
                                 return(
                                     <Fragment
@@ -44,8 +62,12 @@ class Comments extends Component{
                                             <Grid
                                                 item
                                                 sm={12}>
-                                                    <Grid
+                                                    <Grid className={classes.grid2}
                                                         container>
+                                                            <CustomTooltipButtom tip="Delete" onClick={this.handleOnClick} 
+                                                                btnClassName={classes.deleteButton}>
+                                                                    <DeleteIcon color="secondary"/>
+                                                            </CustomTooltipButtom>
                                                             <Grid
                                                                 item
                                                                 sm={2}>

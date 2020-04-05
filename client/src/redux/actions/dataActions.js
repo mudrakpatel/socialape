@@ -13,6 +13,7 @@ import {
     SET_SCREAM,
     STOP_LOADING_UI,
     SUBMIT_COMMENT,
+    DELETE_COMMENT,
 } from '../types';
 
 //Action to get one Scream
@@ -111,6 +112,18 @@ export const submitComment = (screamId, commentData) => (dispatch) => {
             type: SET_ERRORS,
             payload: err.response.data,
         });
+    });
+};
+
+//Delete a comment posted on a Scream
+export const deleteComment = (commentId) => (dispatch) => {
+    axios.delete(`/comment/${commentId}`).then((response) => {
+        dispatch({
+            type: DELETE_COMMENT,
+            payload: commentId,
+        });
+    }).catch((err) => {
+        console.log(err);
     });
 };
 

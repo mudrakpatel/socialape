@@ -11,6 +11,7 @@ import {
     LOADING_DATA,
     POST_SCREAM,
     SUBMIT_COMMENT,
+    DELETE_COMMENT,
 } from '../types';
 
 //Initial state of the data reducer
@@ -81,6 +82,14 @@ export default (state = initialState, action) => {
                         ...state.scream.comments,
                     ],
                 },
+            }
+        }
+        case DELETE_COMMENT:{
+            let index = state.scream.comments.findIndex(
+                (comment) => comment.commentId === action.payload);
+            state.scream.comments.splice(index, 1);
+            return {
+                ...state
             }
         }
         default:

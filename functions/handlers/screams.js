@@ -92,6 +92,7 @@ exports.commentOnScream = (request, response) => {
     screamId: request.params.screamId,
     userHandle: request.user.handle,
     userImage: request.user.imageURL,
+    commentId: '',
   };
   //Check if the scream still exists.
   //Might have been deleted so we need
@@ -103,10 +104,18 @@ exports.commentOnScream = (request, response) => {
       }
       return document.ref.update({commentCount: document.data().commentCount + 1});
     }).then(() => {
-      return db.collection('comments').add(newComment);
-    }).then((documentReference) => {
-      newComment.commentId = documentReference.id;
-      return response.status(201).json(newComment);
+      //Add the new comment to the database
+      db.collection('comments').add(newComment).then((documentReference) => {
+        //Assign the commentId property
+        //to the newly added comment
+        //and update in the database.
+        db.doc(`/comments/${documentReference.id}`).update({
+          commentId: documentReference.id
+        }).then(() => {
+          newComment.commentId = documentReference.id;
+          return response.json(newComment);
+        });
+      });
     }).catch((err) => {
       return response.status(500).json({error: err});
     });
