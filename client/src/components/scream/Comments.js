@@ -135,8 +135,11 @@ class Comments extends Component{
 };
 
 Comments.propTypes = {
+    classes: PropTypes.object.isRequired,
     comments: PropTypes.array.isRequired,
     deleteComment: PropTypes.func.isRequired,
+    authenticated: PropTypes.bool.isRequired,
+    loggedInUserHandle: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state) => ({

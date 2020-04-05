@@ -89,7 +89,7 @@ export default (state = initialState, action) => {
                 (comment) => comment.commentId === action.payload);
             state.scream.comments.splice(index, 1);
             return {
-                ...state
+                ...state,
             }
         }
         default:

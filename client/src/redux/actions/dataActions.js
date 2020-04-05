@@ -117,13 +117,13 @@ export const submitComment = (screamId, commentData) => (dispatch) => {
 
 //Delete a comment posted on a Scream
 export const deleteComment = (commentId) => (dispatch) => {
-    axios.delete(`/comment/${commentId}`).then((response) => {
+    axios.delete(`/comment/${commentId}`).then(() => {
         dispatch({
             type: DELETE_COMMENT,
             payload: commentId,
         });
     }).catch((err) => {
-        console.log(err);
+        console.log(err.message);
     });
 };
 
