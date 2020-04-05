@@ -2,6 +2,8 @@ import React, {Component, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import {Link} from 'react-router-dom';
 import dayjs from 'dayjs';
+//Redux imports
+import {connect} from 'react-redux';
 //Utilities ('Util' folder) imports
 import CustomTooltipButtom from '../../util/CustomTooltipButton';
 //MUI (Material UI) imports
@@ -10,6 +12,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 //Icon imports
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
+//Action imports
+import {deleteComment} from '../../redux/actions/dataActions';
 
 const styles = (theme) => ({
     ...theme.spreadThis,
@@ -34,12 +38,15 @@ const styles = (theme) => ({
 
 class Comments extends Component{
 
-    handleOnClick = () => {
-        
+    handleCommentDelete = (commentId) => {
+        const {deleteComment} = this.props;
+        deleteComment(commentId); 
     };
 
     render(){
         const {
+            authenticated,
+            loggedInUserHandle,
             comments, 
             classes,
         } = this.props;
@@ -64,10 +71,15 @@ class Comments extends Component{
                                                 sm={12}>
                                                     <Grid className={classes.grid2}
                                                         container>
-                                                            <CustomTooltipButtom tip="Delete" onClick={this.handleOnClick} 
-                                                                btnClassName={classes.deleteButton}>
-                                                                    <DeleteIcon color="secondary"/>
-                                                            </CustomTooltipButtom>
+                                                            {
+                                                                authenticated && userHandle === loggedInUserHandle ? (
+                                                                    <CustomTooltipButtom tip="Delete" 
+                                                                        onClick={() => this.handleCommentDelete(commentId)} 
+                                                                        btnClassName={classes.deleteButton}>
+                                                                            <DeleteIcon color="secondary"/>
+                                                                    </CustomTooltipButtom>
+                                                                ) : (null)
+                                                            }
                                                             <Grid
                                                                 item
                                                                 sm={2}>
@@ -124,6 +136,19 @@ class Comments extends Component{
 
 Comments.propTypes = {
     comments: PropTypes.array.isRequired,
+    deleteComment: PropTypes.func.isRequired,
 };
 
-export default withStyles(styles)(Comments);
+const mapStateToProps = (state) => ({
+    authenticated: state.user.authenticated,
+    loggedInUserHandle: state.user.credentials.handle,
+});
+
+const mapActionsToProps = {
+    deleteComment,
+};
+
+export default connect(
+    mapStateToProps,
+    mapActionsToProps,
+)(withStyles(styles)(Comments));
