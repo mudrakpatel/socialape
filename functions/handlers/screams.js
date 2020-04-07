@@ -109,12 +109,10 @@ exports.commentOnScream = (request, response) => {
         //Assign the commentId property
         //to the newly added comment
         //and update in the database.
-        db.doc(`/comments/${documentReference.id}`).update({
-          commentId: documentReference.id
-        }).then(() => {
-          newComment.commentId = documentReference.id;
-          return response.json(newComment);
-        });
+        newComment.commentId = documentReference.id;
+        console.log(newComment);
+        db.collection('comments').doc(documentReference.id).update(newComment);
+        return response.status(201).json(newComment);
       });
     }).catch((err) => {
       return response.status(500).json({error: err});

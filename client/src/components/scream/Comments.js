@@ -38,11 +38,6 @@ const styles = (theme) => ({
 
 class Comments extends Component{
 
-    handleCommentDelete = (commentId) => {
-        const {deleteComment} = this.props;
-        deleteComment(commentId); 
-    };
-
     render(){
         const {
             authenticated,
@@ -72,9 +67,9 @@ class Comments extends Component{
                                                     <Grid className={classes.grid2}
                                                         container>
                                                             {
-                                                                authenticated && userHandle === loggedInUserHandle ? (
+                                                                (authenticated && userHandle === loggedInUserHandle) ? (
                                                                     <CustomTooltipButtom tip="Delete" 
-                                                                        onClick={() => this.handleCommentDelete(commentId)} 
+                                                                        onClick={() => this.props.deleteComment(commentId)} 
                                                                         btnClassName={classes.deleteButton}>
                                                                             <DeleteIcon color="secondary"/>
                                                                     </CustomTooltipButtom>

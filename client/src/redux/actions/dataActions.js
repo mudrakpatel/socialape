@@ -117,6 +117,7 @@ export const submitComment = (screamId, commentData) => (dispatch) => {
 
 //Delete a comment posted on a Scream
 export const deleteComment = (commentId) => (dispatch) => {
+    console.log(`Comment ID: ${commentId}`);
     axios.delete(`/comment/${commentId}`).then(() => {
         dispatch({
             type: DELETE_COMMENT,

@@ -85,9 +85,9 @@ export default (state = initialState, action) => {
             }
         }
         case DELETE_COMMENT:{
-            let index = state.scream.comments.findIndex(
-                (comment) => comment.commentId === action.payload);
-            state.scream.comments.splice(index, 1);
+            let newComments = state.scream.comments.filter(
+                (comment) => comment.commentId !== action.payload);
+            state.scream.comments = newComments;
             return {
                 ...state,
             }
