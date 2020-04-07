@@ -105,13 +105,15 @@ exports.commentOnScream = (request, response) => {
       return document.ref.update({commentCount: document.data().commentCount + 1});
     }).then(() => {
       //Add the new comment to the database
-      db.collection('comments').add(newComment).then((documentReference) => {
+      const commentsCollectionReference = db.collection('comments');
+      commentsCollectionReference.add(newComment).then((documentReference) => {
         //Assign the commentId property
         //to the newly added comment
         //and update in the database.
         newComment.commentId = documentReference.id;
-        console.log(newComment);
-        db.collection('comments').doc(documentReference.id).update(newComment);
+        commentsCollectionReference.doc(documentReference.id).update({
+          commentId: documentReference.id
+        });
         return response.status(201).json(newComment);
       });
     }).catch((err) => {
