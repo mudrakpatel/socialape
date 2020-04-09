@@ -33,14 +33,14 @@ const { markNotificationsRead } = require('./handlers/notifications');
 
 // Scream routes
 app.get('/screams', getAllScreams);
-app.post('/scream', firebaseAuthMiddleware, addScream);
 app.get('/scream/:screamId', getScream);
 app.get('/comments/:screamId', getCommentsForScream);
-app.post('/scream/:screamId/comment', firebaseAuthMiddleware, commentOnScream);
-app.delete('/comment/:commentId', firebaseAuthMiddleware, deleteComment);
+app.post('/scream', firebaseAuthMiddleware, addScream);
 app.get('/scream/:screamId/like', firebaseAuthMiddleware, likeScream);
-app.get('/scream/:screamId/unlike', firebaseAuthMiddleware, unlikeScream);
 app.delete('/scream/:screamId', firebaseAuthMiddleware, deleteScream);
+app.delete('/comment/:commentId', firebaseAuthMiddleware, deleteComment);
+app.get('/scream/:screamId/unlike', firebaseAuthMiddleware, unlikeScream);
+app.post('/scream/:screamId/comment', firebaseAuthMiddleware, commentOnScream);
 //Users routes
 app.post('/signup', signup);
 app.post('/login', login);
