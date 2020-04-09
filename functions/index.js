@@ -17,6 +17,7 @@ const {
     unlikeScream,
     deleteScream,
     deleteComment,
+    getCommentsForScream,
 } = require('./handlers/screams');
 //Import User handlers
 const {
@@ -34,6 +35,7 @@ const { markNotificationsRead } = require('./handlers/notifications');
 app.get('/screams', getAllScreams);
 app.post('/scream', firebaseAuthMiddleware, addScream);
 app.get('/scream/:screamId', getScream);
+app.get('/comments/:screamId', getCommentsForScream);
 app.post('/scream/:screamId/comment', firebaseAuthMiddleware, commentOnScream);
 app.delete('/comment/:commentId', firebaseAuthMiddleware, deleteComment);
 app.get('/scream/:screamId/like', firebaseAuthMiddleware, likeScream);

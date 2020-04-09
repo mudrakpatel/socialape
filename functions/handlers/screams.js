@@ -81,6 +81,21 @@ exports.getScream = (request, response) => {
     });
 };
 
+//Handler to get comments poated on a Scream using the screamId parameter
+exports.getCommentsForScream = (request, response) => {
+  let comments = [];
+  db.collection('comments').orderBy('createdAt', 'desc')
+    .where('screamId', '==', request.params.screamId).get()
+    .then((querySnapshot) => {
+      querySnapshot.docs.forEach((comment) => {
+        comments.push(comment.data());
+      });
+      return response.status(200).json({comments});
+    }).catch((err) => {
+      return response.status(500).json({error: err});
+    });
+};
+
 //Add a comment to a Scream
 exports.commentOnScream = (request, response) => {
   //Validate data for empty strings
