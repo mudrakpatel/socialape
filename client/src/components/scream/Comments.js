@@ -38,11 +38,16 @@ const styles = (theme) => ({
 
 class Comments extends Component{
 
+    handleDeleteButtonClick = (commentId) => {
+        const {deleteComment} = this.props;
+        deleteComment(commentId);
+    };
+
     render(){
         const {
             authenticated,
             loggedInUserHandle,
-            comments, 
+            comments,
             classes,
         } = this.props;
         return(
@@ -60,7 +65,7 @@ class Comments extends Component{
                                 } = comment;
                                 return(
                                     <Fragment
-                                        key={createdAt}>
+                                        key={commentId}>
                                             <Grid
                                                 item
                                                 sm={12}>
@@ -69,7 +74,7 @@ class Comments extends Component{
                                                             {
                                                                 (authenticated && userHandle === loggedInUserHandle) ? (
                                                                     <CustomTooltipButtom tip="Delete" 
-                                                                        onClick={() => this.props.deleteComment(commentId)} 
+                                                                        onClick={() => this.handleDeleteButtonClick(commentId)} 
                                                                         btnClassName={classes.deleteButton}>
                                                                             <DeleteIcon color="secondary"/>
                                                                     </CustomTooltipButtom>
@@ -135,11 +140,13 @@ Comments.propTypes = {
     deleteComment: PropTypes.func.isRequired,
     authenticated: PropTypes.bool.isRequired,
     loggedInUserHandle: PropTypes.string.isRequired,
+    comments: PropTypes.array.isRequired,
 };
 
 const mapStateToProps = (state) => ({
     authenticated: state.user.authenticated,
     loggedInUserHandle: state.user.credentials.handle,
+    comments: state.data.comments,
 });
 
 const mapActionsToProps = {

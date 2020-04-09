@@ -18,6 +18,7 @@ import {
 const initialState = {
     screams: [],
     scream: {},
+    comments: [], //For the individual Scream object
     loading: false,
 };
 
@@ -75,20 +76,21 @@ export default (state = initialState, action) => {
         case SUBMIT_COMMENT:{
             return{
                 ...state,
+                comments: [
+                    action.payload,
+                    ...state.comments, //This line might throw a problem
+                ],
                 scream:{
                     ...state.scream,
-                    comments: [
-                        action.payload,
-                        ...state.scream.comments,
-                    ],
                 },
             }
         }
         case DELETE_COMMENT:{
-            let newComments = state.scream.comments.filter(
-                (comment) => comment.commentId !== action.payload);
-            state.scream.comments = newComments;
+            let index = state.comments.findIndex(
+                (comment) => comment.commentId === action.payload);
+            state.comments.splice(index, 1);
             return {
+                ...state.comments,
                 ...state,
             }
         }

@@ -1,4 +1,5 @@
 {
+  "proxy": "https://us-central1-socialapemudrak.cloudfunctions.net/api",
   "name": "client",
   "version": "0.1.0",
   "private": true,
@@ -37,6 +38,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "https://us-central1-socialapemudrak.cloudfunctions.net/api"
+  }
 }
