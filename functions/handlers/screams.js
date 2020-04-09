@@ -83,39 +83,37 @@ exports.getScream = (request, response) => {
 
 //Add a comment to a Scream
 exports.commentOnScream = (request, response) => {
+  //Validate data for empty strings
   if(request.body.body.trim() === ''){
     return response.status(400).json({comment: 'Comment must not be empty'});
   }
+  const commentsCollectionReference = db.collection('comments');
+  const newCommentId = commentsCollectionReference.doc().id;
   const newComment = {
-    body: request.body.body,
-    createdAt: new Date().toISOString(),
+    commentId: newCommentId,
     screamId: request.params.screamId,
+    createdAt: new Date().toISOString(),
     userHandle: request.user.handle,
+    body: request.body.body,
     userImage: request.user.imageURL,
-    commentId: '',
   };
-  //Check if the scream still exists.
-  //Might have been deleted so we need
-  //to check so we can handle the error.
   db.doc(`/screams/${request.params.screamId}`).get()
     .then((document) => {
+      //Check if the scream still exists.
       if(!document.exists){
-        return response.status(404).json({error: 'Scream not found'});
+        return response.status(404).json({
+          error: 'Scream not found'
+        });
       }
-      return document.ref.update({commentCount: document.data().commentCount + 1});
+      return document.ref.update({
+        commentCount: document.data().commentCount + 1
+      });
     }).then(() => {
       //Add the new comment to the database
-      const commentsCollectionReference = db.collection('comments');
-      commentsCollectionReference.add(newComment).then((documentReference) => {
-        //Assign the commentId property
-        //to the newly added comment
-        //and update in the database.
-        newComment.commentId = documentReference.id;
-        commentsCollectionReference.doc(documentReference.id).update({
-          commentId: documentReference.id
-        });
-        return response.status(201).json(newComment);
+      commentsCollectionReference.doc(newCommentId).set(newComment, {
+        merge: true,
       });
+      return response.json(newComment);
     }).catch((err) => {
       return response.status(500).json({error: err});
     });
