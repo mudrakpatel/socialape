@@ -112,7 +112,6 @@ class ScreamDialog extends Component{
                 commentCount,
                 userImage,
                 userHandle,
-                comments,
             },
             UI: {
                 loading,
@@ -181,7 +180,7 @@ class ScreamDialog extends Component{
                     />
                     <CommentForm screamId={screamId}/>
                     <Comments 
-                        comments={comments}
+                        screamId={screamId}
                     />
             </Grid>
         );
@@ -232,6 +231,7 @@ ScreamDialog.propTypes = {
 
 const mapStateToProps = (state) => ({
     scream: state.data.scream,
+    comments: state.data.comments,
     UI: state.UI,
 });
 

@@ -12,6 +12,7 @@ import {
     POST_SCREAM,
     SUBMIT_COMMENT,
     DELETE_COMMENT,
+    SET_COMMENTS,
 } from '../types';
 
 //Initial state of the data reducer
@@ -37,6 +38,13 @@ export default (state = initialState, action) => {
                 loading: false,
             }
         }
+        case SET_COMMENTS:{
+            return{
+                ...state,
+                comments: action.payload,
+                loading: false,
+            }
+        }
         case SET_SCREAMS:{
             return{
                 ...state,
@@ -56,11 +64,19 @@ export default (state = initialState, action) => {
                 ...state,
             }
         }
-        case DELETE_SCREAM:{
+        case DELETE_SCREAM: {
             let index = state.screams.findIndex(
                 (scream) => scream.screamId === action.payload);
             state.screams.splice(index, 1);
-            return{
+            return {
+                ...state,
+            }
+        }
+        case DELETE_COMMENT:{
+            let index = state.comments.findIndex(
+                (comment) => comment.commentId === action.payload);
+            state.comments.splice(index, 1);
+            return {
                 ...state,
             }
         }
@@ -83,15 +99,6 @@ export default (state = initialState, action) => {
                 scream:{
                     ...state.scream,
                 },
-            }
-        }
-        case DELETE_COMMENT:{
-            let index = state.comments.findIndex(
-                (comment) => comment.commentId === action.payload);
-            state.comments.splice(index, 1);
-            return {
-                ...state.comments,
-                ...state,
             }
         }
         default:

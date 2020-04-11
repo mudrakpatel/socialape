@@ -8,12 +8,16 @@ import {connect} from 'react-redux';
 import CustomTooltipButtom from '../../util/CustomTooltipButton';
 //MUI (Material UI) imports
 import withStyles from '@material-ui/core/styles/withStyles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 //Icon imports
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 //Action imports
-import {deleteComment} from '../../redux/actions/dataActions';
+import {
+    getCommentsForScream,
+    deleteComment,
+} from '../../redux/actions/dataActions';
 
 const styles = (theme) => ({
     ...theme.spreadThis,
@@ -34,12 +38,27 @@ const styles = (theme) => ({
         left: '90%',
         position: 'absolute'
     },
+    spinnerDiv: {
+        textAlign: 'center',
+        marginTop: 50,
+        marginBottom: 50,
+    },
 });
 
 class Comments extends Component{
 
+    componentDidMount(){
+        const {
+            screamId, 
+            getCommentsForScream,
+        } = this.props;
+        getCommentsForScream(screamId);
+    }
+
     handleDeleteButtonClick = (commentId) => {
-        const {deleteComment} = this.props;
+        const {
+            deleteComment,
+        } = this.props;
         deleteComment(commentId);
     };
 
@@ -47,88 +66,56 @@ class Comments extends Component{
         const {
             authenticated,
             loggedInUserHandle,
-            comments,
+            //comments,
             classes,
         } = this.props;
+        //Markup to be rendered for displaying comments
+        let commentsMarkup = (
+            this.props.data.comments.map(
+                (comment, index) => (
+                    <Fragment key={comment.commentId}>
+                        <Grid item sm={12}>
+                            <Grid className={classes.grid2} container>
+                                {
+                                    (authenticated && comment.userHandle === loggedInUserHandle) ? (
+                                        <CustomTooltipButtom tip="Delete" onClick={
+                                                () => this.handleDeleteButtonClick(comment.commentId)
+                                            } btnClassName={classes.deleteButton}>
+                                                <DeleteIcon color="secondary"/>
+                                        </CustomTooltipButtom>
+                                    ) : (null)
+                                }
+                                <Grid item sm={2}>
+                                    <img src={comment.userImage} alt="comment" className={classes.commentImage}/>
+                                </Grid>
+                                <Grid item sm={9}>
+                                    <div className={classes.commentData}>
+                                        <Typography variant="h5" color="primary" component={Link} to={`/users/${comment.userHandle}`}>
+                                            {comment.userHandle}
+                                        </Typography>
+                                        <Typography variant="body2" color="textSecondary">
+                                            {dayjs(comment.createdAt).format('h:mm a, DD MMMM YYYY')}
+                                        </Typography>
+                                        <hr className={classes.invisibleSeparator}/>
+                                        <Typography variant="body1">
+                                            {comment.body}
+                                        </Typography>
+                                    </div>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        {
+                            index !== this.props.data.comments.length - 1 && (
+                                <hr className={classes.visibleSeparator}/>
+                            )
+                        }
+                    </Fragment>
+                )
+            )
+        );
         return(
-            <Grid
-                container>
-                    {
-                        comments.map(
-                            (comment, index) => {
-                                const {
-                                    body,
-                                    createdAt,
-                                    userImage,
-                                    userHandle,
-                                    commentId,
-                                } = comment;
-                                return(
-                                    <Fragment
-                                        key={commentId}>
-                                            <Grid
-                                                item
-                                                sm={12}>
-                                                    <Grid className={classes.grid2}
-                                                        container>
-                                                            {
-                                                                (authenticated && userHandle === loggedInUserHandle) ? (
-                                                                    <CustomTooltipButtom tip="Delete" 
-                                                                        onClick={() => this.handleDeleteButtonClick(commentId)} 
-                                                                        btnClassName={classes.deleteButton}>
-                                                                            <DeleteIcon color="secondary"/>
-                                                                    </CustomTooltipButtom>
-                                                                ) : (null)
-                                                            }
-                                                            <Grid
-                                                                item
-                                                                sm={2}>
-                                                                    <img
-                                                                        src={userImage}
-                                                                        alt="comment"
-                                                                        className={classes.commentImage}
-                                                                    />
-                                                            </Grid>
-                                                            <Grid
-                                                                item
-                                                                sm={9}>
-                                                                    <div
-                                                                        className={classes.commentData}>
-                                                                            <Typography
-                                                                                variant="h5"
-                                                                                color="primary"
-                                                                                component={Link}
-                                                                                to={`/users/${userHandle}`}>
-                                                                                    {userHandle}
-                                                                            </Typography>
-                                                                            <Typography
-                                                                                variant="body2"
-                                                                                color="textSecondary">
-                                                                                    {dayjs(createdAt).format('h:mm a, DD MMMM YYYY')}
-                                                                            </Typography>
-                                                                            <hr
-                                                                                className={classes.invisibleSeparator}
-                                                                            />
-                                                                            <Typography
-                                                                                variant="body1">
-                                                                                    {body}
-                                                                            </Typography>
-                                                                    </div>
-                                                            </Grid>
-                                                    </Grid>
-                                            </Grid>
-                                            {
-                                                index !== comments.length - 1 && (
-                                                    < hr
-                                                        className={classes.visibleSeparator}
-                                                    />
-                                                )
-                                            }
-                                    </Fragment>
-                                );
-                            }
-                        )
-                    }
+            <Grid container>
+                {commentsMarkup}
             </Grid>
         );
     };
@@ -136,20 +123,22 @@ class Comments extends Component{
 
 Comments.propTypes = {
     classes: PropTypes.object.isRequired,
-    comments: PropTypes.array.isRequired,
+    //comments: PropTypes.array.isRequired,
     deleteComment: PropTypes.func.isRequired,
+    getCommentsForScream: PropTypes.func.isRequired,
     authenticated: PropTypes.bool.isRequired,
     loggedInUserHandle: PropTypes.string.isRequired,
-    comments: PropTypes.array.isRequired,
+    data: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
     authenticated: state.user.authenticated,
     loggedInUserHandle: state.user.credentials.handle,
-    comments: state.data.comments,
+    data: state.data,
 });
 
 const mapActionsToProps = {
+    getCommentsForScream,
     deleteComment,
 };
 

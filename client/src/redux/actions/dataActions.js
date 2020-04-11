@@ -14,6 +14,7 @@ import {
     STOP_LOADING_UI,
     SUBMIT_COMMENT,
     DELETE_COMMENT,
+    SET_COMMENTS,
 } from '../types';
 
 //Action to get one Scream
@@ -25,6 +26,18 @@ export const getScream = (screamId) => (dispatch) => {
             payload: response.data,
         });
         dispatch({type: STOP_LOADING_UI});
+    }).catch((err) => {
+        console.log(err);
+    });
+};
+
+//Action to retrieve comments for a particular Scream
+export const getCommentsForScream = (screamId) => (dispatch) => {
+    axios.get(`/comments/${screamId}`).then((response) => {
+        dispatch({
+            type: SET_COMMENTS,
+            payload: response.data.comments,
+        });
     }).catch((err) => {
         console.log(err);
     });
@@ -82,6 +95,19 @@ export const deleteScream = (screamId) => (dispatch) => {
     });
 };
 
+//Delete a comment posted on a Scream
+export const deleteComment = (commentId) => (dispatch) => {
+    console.log(`Comment ID: ${commentId}`);
+    axios.delete(`/comment/${commentId}`).then(() => {
+        dispatch({
+            type: DELETE_COMMENT,
+            payload: commentId,
+        });
+    }).catch((err) => {
+        console.log(err.message);
+    });
+};
+
 //Action to post/ADD a Scream
 export const postScream = (newScream) => (dispatch) => {
     dispatch({type: LOADING_UI});
@@ -112,19 +138,6 @@ export const submitComment = (screamId, commentData) => (dispatch) => {
             type: SET_ERRORS,
             payload: err.response.data,
         });
-    });
-};
-
-//Delete a comment posted on a Scream
-export const deleteComment = (commentId) => (dispatch) => {
-    console.log(`Comment ID: ${commentId}`);
-    axios.delete(`/comment/${commentId}`).then(() => {
-        dispatch({
-            type: DELETE_COMMENT,
-            payload: commentId,
-        });
-    }).catch((err) => {
-        console.log(err.message);
     });
 };
 
