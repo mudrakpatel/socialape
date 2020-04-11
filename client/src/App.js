@@ -23,6 +23,9 @@ import Signup from './pages/signup';
 
 //Initialize a MaterialUI theme
 const theme = createMuiTheme(themeFile);
+/*Tell the app to send request to proxy URL 
+defined in package.json during production mode.*/
+axios.defaults.baseURL = 'https://us-central1-socialapemudrak.cloudfunctions.net/api';
 //Get Authentication token from localStorage object
 const token = localStorage.firebaseIdToken;
 //Check if the token exists
