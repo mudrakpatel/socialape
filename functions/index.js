@@ -1,8 +1,19 @@
 //Import firebase-functions for writing database triggers
 const functions = require('firebase-functions');
+//Require CORS
+var cors = require('cors');
+//Require body-parser
+var bodyParser = require('body-parser');
 //Require express and call the 
 //express function in the sameline
 const app = require('express')();
+app.use(cors({
+    credentials: true,
+    origin: true
+}));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 //Import the initialized firestore database
 const {db} = require('./util/admin');
 //Import custom authentication middleware
