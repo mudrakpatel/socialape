@@ -108,8 +108,6 @@ class ScreamDialog extends Component{
                 screamId,
                 body,
                 createdAt,
-                likeCount,
-                commentCount,
                 userImage,
                 userHandle,
             },
@@ -166,13 +164,13 @@ class ScreamDialog extends Component{
                             </Typography>
                             <LikeButton screamId={screamId}/>
                             <span>
-                                {likeCount} likes
+                                {this.props.screamLikeCount} likes
                             </span>
                             <CustomTooltipButton tip="Comments">
                                 <ChatIcon color="primary" />
                             </CustomTooltipButton>
                             <span>
-                                {commentCount} comments
+                                {this.props.screamCommentCount} comments
                             </span>
                     </Grid>
                     <hr 
@@ -227,10 +225,14 @@ ScreamDialog.propTypes = {
     userHandle: PropTypes.string.isRequired,
     scream: PropTypes.object.isRequired,
     UI: PropTypes.object.isRequired,
+    screamLikeCount: PropTypes.number.isRequired,
+    screamCommentCount: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
     scream: state.data.scream,
+    screamLikeCount: state.data.scream.likeCount,
+    screamCommentCount: state.data.scream.commentCount,
     comments: state.data.comments,
     UI: state.UI,
 });

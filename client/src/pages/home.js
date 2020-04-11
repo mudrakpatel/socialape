@@ -16,12 +16,14 @@ class Home extends Component{
     }
 
     render(){
-        const {screams, loading} = this.props.data;
+        const {loading} = this.props.data;
         let recentScreams = loading ? (
             <ScreamSkeleton/>
         ) : (
-            screams.map(scream => (
-                <Scream key={scream.screamId} scream={scream}/>)
+            this.props.data.screams.map(scream => 
+                (
+                    <Scream key={scream.screamId} scream={scream}/>
+                )
             )
         );
         return(

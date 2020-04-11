@@ -36,6 +36,7 @@ const styles = {
 };
 
 class Scream extends Component {
+
     render(){
         dayjs.extend(relativeTime);
         const { 
@@ -52,8 +53,6 @@ class Scream extends Component {
                 userImage,
                 userHandle,
                 screamId,
-                likeCount,
-                commentCount,
             },
             openDialog,
         } = this.props;
@@ -80,13 +79,13 @@ class Scream extends Component {
                     </Typography>
                     <LikeButton screamId={screamId}/>
                     <span>
-                        {likeCount} Likes
+                        {this.props.scream.likeCount} Likes
                     </span>
                     <CustomTooltipButton tip="Comments">
                         <ChatIcon color="primary" />
                     </CustomTooltipButton>
                     <span>
-                        {commentCount} comments
+                        {this.props.scream.commentCount} comments
                     </span>
                     <ScreamDialog screamId={screamId} userHandle={userHandle} openDialog={openDialog}/>
                 </CardContent>

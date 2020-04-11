@@ -8,7 +8,6 @@ import {connect} from 'react-redux';
 import CustomTooltipButtom from '../../util/CustomTooltipButton';
 //MUI (Material UI) imports
 import withStyles from '@material-ui/core/styles/withStyles';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 //Icon imports

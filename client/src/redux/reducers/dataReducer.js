@@ -25,10 +25,43 @@ const initialState = {
 
 export default (state = initialState, action) => {
     switch(action.type){
-        case LOADING_DATA:{
+        case POST_SCREAM: {
             return {
                 ...state,
-                loading: true,
+                screams: [
+                    action.payload,
+                    ...state.screams,
+                ],
+            }
+        }
+        case SUBMIT_COMMENT: {
+            state.scream.commentCount = state.scream.commentCount + 1;
+            return {
+                ...state,
+                comments: [
+                    action.payload,
+                    ...state.comments,
+                ],
+                scream: {
+                    ...state.scream,
+                },
+            }
+        }
+        case DELETE_SCREAM: {
+            let index = state.screams.findIndex(
+                (scream) => scream.screamId === action.payload);
+            state.screams.splice(index, 1);
+            return {
+                ...state,
+            }
+        }
+        case DELETE_COMMENT: {
+            state.scream.commentCount = state.scream.commentCount - 1;
+            let index = state.comments.findIndex(
+                (comment) => comment.commentId === action.payload);
+            state.comments.splice(index, 1);
+            return {
+                ...state,
             }
         }
         case SET_SCREAM:{
@@ -64,41 +97,10 @@ export default (state = initialState, action) => {
                 ...state,
             }
         }
-        case DELETE_SCREAM: {
-            let index = state.screams.findIndex(
-                (scream) => scream.screamId === action.payload);
-            state.screams.splice(index, 1);
+        case LOADING_DATA: {
             return {
                 ...state,
-            }
-        }
-        case DELETE_COMMENT:{
-            let index = state.comments.findIndex(
-                (comment) => comment.commentId === action.payload);
-            state.comments.splice(index, 1);
-            return {
-                ...state,
-            }
-        }
-        case POST_SCREAM:{
-            return{
-                ...state,
-                screams: [
-                    action.payload,
-                    ...state.screams,
-                ],
-            }
-        }
-        case SUBMIT_COMMENT:{
-            return{
-                ...state,
-                comments: [
-                    action.payload,
-                    ...state.comments, //This line might throw a problem
-                ],
-                scream:{
-                    ...state.scream,
-                },
+                loading: true,
             }
         }
         default:
